@@ -1,57 +1,40 @@
-namespace AUTH {
-  type GetResponse = User;
-  type GetRequest = void;
+import { IUser } from "./user.types";
 
-  type PostLoginResponse = {
-    accessToken: string;
-    accessTokenExpiration: string;
-    refreshToken: string;
-  };
-  type PostLoginRequest = {
+export interface ITokens {
+  accessToken: string;
+  refreshToken: string;
+}
+
+export namespace AUTH {
+  // --- Запросы ---
+  export type GetRequest = void;
+
+  export type GetResponse = IUser;
+
+  export interface PostLoginRequest {
     email: string;
     password: string;
-  };
+  }
 
-  type PostRegisterResponse = {
-    message: string;
-    accessToken: string;
-    accessTokenExpiration: string;
-    refreshToken: string;
-  };
-  type PostRegisterRequest = {
+  export interface PostRegisterRequest {
     email: string;
-    username: string;
-    photo: string;
     password: string;
-  };
+  }
 
-  type PostLogoutResponse = {
-    message: string;
-  };
-  type PostLogoutRequest = void;
-
-  type PatchRefreshTokenResponse = {
-    accessToken: string;
-    accessTokenExpiration: string;
+  export interface PatchRefreshTokenRequest {
     refreshToken: string;
-  };
-  type PatchRefreshTokenRequest = {
-    refreshToken: string;
-  };
+  }
 
-  type PostForgotResponse = {
-    message: string;
-  };
-  type PostForgotRequest = {
-    email: string;
-    frontEndUrl: string;
-  };
+  // --- Ответы ---
+  export interface PostLoginResponse extends ITokens {
+    user: IUser;
+  }
 
-  type PatchResetPasswordResponse = {
-    message: string;
-  };
-  type PatchResetPasswordRequest = {
-    token: string;
-    newPassword: string;
-  };
+  export interface PostRegisterResponse extends ITokens {
+    user: IUser;
+  }
+
+  export interface PatchRefreshTokenResponse extends ITokens {
+    user: IUser;
+  }
 }

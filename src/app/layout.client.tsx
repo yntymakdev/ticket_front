@@ -1,5 +1,6 @@
 "use client";
-import ReduxProvider from "@/provider/SessionProvider";
+import { ReduxProvider } from "@/provider/ReduxProvider";
+import { SessionProvider } from "@/provider/SessionProvider";
 import React, { FC, ReactNode } from "react";
 
 interface RootLayoutClientProps {
