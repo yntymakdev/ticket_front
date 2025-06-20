@@ -1,4 +1,4 @@
-import { IUser } from "./user.types";
+import { IUser } from "@/types/user.types";
 
 export interface ITokens {
   accessToken: string;
@@ -31,10 +31,12 @@ export namespace AUTH {
   }
 
   export interface PostRegisterResponse extends ITokens {
-    user: IUser;
+    email: string;
+    password: string;
   }
 
   export interface PatchRefreshTokenResponse extends ITokens {
-    user: IUser;
+    email: string;
+    password: string;
   }
 }

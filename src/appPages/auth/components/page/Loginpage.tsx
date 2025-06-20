@@ -1,7 +1,7 @@
 "use client";
 import { SubmitHandler, useForm } from "react-hook-form";
-import Link from "next/link";
-import { useLoginMutation } from "@/redux/api/auth";
+import { useRouter } from "next/navigation";
+import { useLoginMutation, useRegisterMutation } from "@/redux/api/auth";
 import {
   Card,
   CardAction,
@@ -13,51 +13,97 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import toast, { Toaster } from "react-hot-toast";
+import { useState } from "react";
 
 interface IAuthForm {
   email: string;
   password: string;
 }
 
-const Loginpage = () => {
-  //   const { register, handleSubmit } = useForm<IFormInput>();
+const LoginPage = () => {
+  const [isLogin, setIsLogin] = useState(true);
+  const router = useRouter();
+  const [login, { isLoading: isLoginLoading }] = useLoginMutation();
+  const [register, { isLoading: isRegisterLoading }] = useRegisterMutation();
+  const {
+    register: formRegister,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<IAuthForm>();
+
+  const onSubmit: SubmitHandler<IAuthForm> = async (data) => {
+    try {
+      if (isLogin) {
+        const res = await login(data).unwrap();
+        toast.success("Успешный вход");
+        router.push("/tickets/dashboard");
+      } else {
+        const res = await register(data).unwrap();
+        toast.success("Регистрация прошла успешно");
+        router.push("/tickets/dashboard");
+      }
+      reset();
+    } catch (err: any) {
+      console.error("Auth error:", err);
+      const msg = err?.data?.message || (isLogin ? "Ошибка входа" : "Ошибка регистрации");
+      toast.error(msg);
+    }
+  };
 
   return (
-    <section>
-      <div className="centered">
-        <Card className="w-full max-w-sm">
-          <CardHeader>
-            <CardTitle>Login to your account</CardTitle>
-            <CardDescription>Enter your email below to login to your account</CardDescription>
-            <CardAction>
-              <Button variant="link">Register</Button>
-            </CardAction>
-          </CardHeader>
-          <CardContent>
-            <form>
-              <div className="flex flex-col gap-6">
-                <div className="grid gap-2">
-                  <label htmlFor="email">Email</label>
-                  <Input id="email" type="email" placeholder="m@example.com" required />
-                </div>
-                <div className="grid gap-2">
-                  <Input id="password" type="password" required placeholder="******" />
-                </div>
-              </div>
-            </form>
-          </CardContent>
-          <CardFooter className="flex-col gap-2">
-            <Button type="submit" className="w-full">
-              Login
+    <section className="centered min-h-screen">
+      <Toaster position="top-center" />
+      <Card className="w-full max-w-sm">
+        <CardHeader>
+          <CardTitle>{isLogin ? "Login to your account" : "Register new account"}</CardTitle>
+          <CardDescription>
+            {isLogin ? "Enter your email and password to login" : "Enter your email and password to register"}
+          </CardDescription>
+          <CardAction>
+            <Button variant="link" onClick={() => setIsLogin(!isLogin)}>
+              {isLogin ? "Switch to Register" : "Switch to Login"}
             </Button>
-            <Button variant="outline" className="w-full">
-              Register
+          </CardAction>
+        </CardHeader>
+
+        <CardContent>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div className="grid gap-2">
+              <label htmlFor="email">Email</label>
+              <Input
+                id="email"
+                type="email"
+                placeholder="m@example.com"
+                {...formRegister("email", { required: "Введите email" })}
+                className={errors.email ? "border border-red-500" : ""}
+              />
+              {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+            </div>
+
+            <div className="grid gap-2">
+              <label htmlFor="password">Password</label>
+              <Input
+                id="password"
+                type="password"
+                placeholder="******"
+                {...formRegister("password", { required: "Введите пароль" })}
+                className={errors.password ? "border border-red-500" : ""}
+              />
+              {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
+            </div>
+
+            <Button type="submit" className="w-full" disabled={isLogin ? isLoginLoading : isRegisterLoading}>
+              {isLogin ? "Login" : "Register"}
             </Button>
-          </CardFooter>
-        </Card>
-      </div>
+          </form>
+        </CardContent>
+
+        <CardFooter>{/* Доп. инфо или кнопки */}</CardFooter>
+      </Card>
     </section>
   );
 };
 
-export default Loginpage;
+export default LoginPage;

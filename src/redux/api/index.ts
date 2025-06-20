@@ -1,6 +1,6 @@
 import { BaseQueryFn, createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 const baseQuery = fetchBaseQuery({
-  baseUrl: `${process.env.NEXT_PUBLIC_SWAGGER_API_URL}`,
+  baseUrl: `${process.env.NEXT_PUBLIC_API_BASE_URL}`,
   // prepareHeaders: (headers) => {
   // 	let token = null;
   // 	const localStorageData = JSON.parse(localStorage.getItem('tokens')!);

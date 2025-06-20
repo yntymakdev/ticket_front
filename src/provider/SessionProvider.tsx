@@ -52,7 +52,7 @@ export const SessionProvider: FC<SessionProviderProps> = ({ children }) => {
       default:
         break;
     }
-  }, [pathname, status, router]);
+  }, [pathname, router]);
 
   //   useEffect(() => {
   //     handleRefreshToken();
@@ -60,7 +60,7 @@ export const SessionProvider: FC<SessionProviderProps> = ({ children }) => {
 
   useEffect(() => {
     handleNavigation();
-  }, [status, pathname, router, handleNavigation]);
+  }, [pathname, router, handleNavigation]);
 
   return children;
 };

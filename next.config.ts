@@ -4,11 +4,9 @@ const nextConfig: NextConfig = {
   env: {
     SERVER_URL: process.env.SERVER_URL,
     APP_URL: process.env.APP_URL,
+    NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
   },
-  // experimental: {
-  //   // Игнорировать атрибуты от расширений
-  //   suppressHydrationWarning: true,
-  // },
+
   webpack: (config) => {
     config.resolve.alias = {
       ...config.resolve.alias,
