@@ -8,6 +8,7 @@ const api = index.injectEndpoints({
         url: "/auth/login",
         method: "POST",
         body: loginData,
+        credentials: "include",
       }),
       invalidatesTags: ["auth"],
     }),

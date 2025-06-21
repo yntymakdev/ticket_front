@@ -5,8 +5,17 @@ import { DialogClose, DialogContent, DialogOverlay, DialogTrigger } from "@radix
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
+import { useTicketcreateMutation } from "@/redux/api/ticketPost";
+import { TicketStatus } from "@/types/ticket.types";
 
+interface ITicket {
+  title: string;
+  description: string;
+  customerName: string;
+  status: TicketStatus;
+}
 const AddTicketDialog = ({ open, setOpen }: { open: boolean; setOpen: (value: boolean) => void }) => {
+  useTicketcreateMutation();
   const operators = ["Айбек", "Светлана", "Нурислам", "Адилет"];
   const statuses = ["Open", "In Progress", "Closed"];
 

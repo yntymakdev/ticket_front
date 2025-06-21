@@ -4,10 +4,25 @@ import React from "react";
 
 const TicketTable = ({ tickets, setTickets }: { tickets: any[]; setTickets: (value: any[]) => void }) => {
   const allOperators = ["Айбек", "Светлана", "Нурислам", "Адилет"];
+  const statusOptions = [
+    { value: "open", label: "Открыт", color: "bg-green-100 text-green-800" },
+    { value: "in_progress", label: "В процессе", color: "bg-blue-100 text-blue-800" },
+    { value: "closed", label: "Закрыт", color: "bg-gray-200 text-gray-800" },
+  ];
 
   const handleReassign = (ticketId: number, newOperator: string) => {
     const updated = tickets.map((ticket) => (ticket.id === ticketId ? { ...ticket, assignedTo: newOperator } : ticket));
     setTickets(updated);
+  };
+
+  const handleStatusChange = (ticketId: number, newStatus: string) => {
+    const updated = tickets.map((ticket) => (ticket.id === ticketId ? { ...ticket, status: newStatus } : ticket));
+    setTickets(updated);
+  };
+
+  const getStatusStyle = (status: string) => {
+    const found = statusOptions.find((s) => s.value === status);
+    return found?.color || "bg-gray-100 text-gray-800";
   };
 
   return (
@@ -28,11 +43,17 @@ const TicketTable = ({ tickets, setTickets }: { tickets: any[]; setTickets: (val
                 <td className="py-3 px-6 text-gray-900">{ticket.title}</td>
                 <td className="py-3 px-6 text-gray-700">{ticket.customer}</td>
                 <td className="py-3 px-6">
-                  <span
-                    className={`inline-flex items-center px-3 py-1 rounded-full text-sm font-medium ${ticket.statusColor}`}
+                  <select
+                    value={ticket.status}
+                    onChange={(e) => handleStatusChange(ticket.id, e.target.value)}
+                    className={`rounded-full px-3 py-1 text-sm font-medium ${getStatusStyle(ticket.status)}`}
                   >
-                    {ticket.status}
-                  </span>
+                    {statusOptions.map((status) => (
+                      <option key={status.value} value={status.value}>
+                        {status.label}
+                      </option>
+                    ))}
+                  </select>
                 </td>
                 <td className="py-3 px-6">
                   <select
