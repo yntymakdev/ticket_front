@@ -9,7 +9,7 @@ export async function middleware(request: NextRequest) {
 
   const { pathname } = request.nextUrl;
 
-  const isAuthPage = pathname.startsWith("/auth");
+  const isAuthPage = pathname.startsWith("/auth/login");
   const isDashboardPage = pathname.startsWith("/tickets/dashboard");
   const isAdminPage = pathname.startsWith("/tickets/dashboard/admin");
 

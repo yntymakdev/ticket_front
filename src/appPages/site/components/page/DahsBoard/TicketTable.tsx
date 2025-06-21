@@ -1,8 +1,24 @@
 "use client";
 
+import { useTicketgetQuery } from "@/redux/api/ticket";
+import { IAssignment, TicketStatus } from "@/types/ticket.types";
+import { IUser } from "@/types/user.types";
 import React from "react";
+export interface ITicket {
+  id: string;
+  title: string;
+  description: string;
+  customerName: string;
+  status: TicketStatus;
+  createdAt: string;
+  updatedAt: string;
+  createdById: string;
+  createdBy: IUser;
+  assignments: IAssignment[];
+}
 
 const TicketTable = ({ tickets, setTickets }: { tickets: any[]; setTickets: (value: any[]) => void }) => {
+  useTicketgetQuery();
   const allOperators = ["Айбек", "Светлана", "Нурислам", "Адилет"];
   const statusOptions = [
     { value: "open", label: "Открыт", color: "bg-green-100 text-green-800" },

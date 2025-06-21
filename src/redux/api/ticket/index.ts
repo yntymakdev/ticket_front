@@ -8,11 +8,24 @@ const api = index.injectEndpoints({
         url: "/ticket/create",
         method: "POST",
         body: ticketData,
+
         headers: {
           "Content-Type": "application/json",
         },
       }),
       invalidatesTags: ["ticket"],
+    }),
+    ticketget: build.query<TICKET.GetAllResponse, TICKET.GetAllRequest>({
+      query: (ticketData) => ({
+        url: "/ticket/tickets",
+        method: "GET",
+        body: ticketData,
+
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      providesTags: ["ticket"],
     }),
 
     // register: build.mutation<AUTH.PostRegisterResponse, AUTH.PostRegisterRequest>({
@@ -26,4 +39,4 @@ const api = index.injectEndpoints({
   }),
 });
 
-export const { useTicketcreateMutation } = api;
+export const { useTicketcreateMutation,useTicketgetQuery } = api;

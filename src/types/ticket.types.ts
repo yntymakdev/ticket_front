@@ -6,11 +6,20 @@ export interface ITicket {
   description: String;
   customerName: String;
   status: TicketStatus;
-  createdById: String;
-  createdBy: IUser;
-  comments: IComment[];
+  // createdById: String;
+  // createdBy: IUser;
+  // comments: IComment[];
   assignments: IAssignment[];
+  assignedTo: string;
 }
+export interface CreateTicketDto {
+  title: string;
+  description: string;
+  customerName: string;
+  status: TicketStatus;
+  assignedTo?: string;
+}
+
 export interface IComment {
   id: string;
   message: string;
