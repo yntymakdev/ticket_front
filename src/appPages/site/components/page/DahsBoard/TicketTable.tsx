@@ -1,18 +1,16 @@
 "use client";
 import Cookies from "js-cookie";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useTicketAssignMutation, useTicketgetQuery } from "@/redux/api/ticket";
-
+import { useOperatorsQuery } from "@/redux/api/user";
+import { tokenUtils } from "@/hooks/useAuth";
 import { ITicket } from "@/redux/api/ticket/types";
 import { TicketStatus } from "@/types/ticket.types";
-import { tokenUtils } from "@/hooks/useAuth";
-import { useOperatorsQuery } from "@/redux/api/user";
-import { skipToken } from "@reduxjs/toolkit/query";
 
 const TicketTable = () => {
   const token = Cookies.get("accessToken");
-  const userRole = tokenUtils.getUserRole();
-  const userId = tokenUtils.getUserId();
+  const [userRole, setUserRole] = useState<string | null>(null);
+  const [roleChecked, setRoleChecked] = useState(false); // флаг, что роль уже получена
 
   const {
     data: tickets = [],
@@ -28,9 +26,17 @@ const TicketTable = () => {
   const { data: operators = [] } = useOperatorsQuery();
   const [assignTicket] = useTicketAssignMutation();
 
+  // При загрузке компонента и изменении токена — достаём роль из токена
   useEffect(() => {
     if (token && tokenUtils.isTokenValid()) {
+      const role = tokenUtils.getUserRole();
+      console.log("Роль пользователя из токена:", role);
+      setUserRole(role);
+      setRoleChecked(true);
       refetch();
+    } else {
+      setUserRole(null);
+      setRoleChecked(true);
     }
   }, [token, refetch]);
 
@@ -39,12 +45,6 @@ const TicketTable = () => {
     { value: TicketStatus.IN_PROGRESS, label: "В процессе", color: "bg-blue-100 text-blue-800" },
     { value: TicketStatus.CLOSED, label: "Закрыт", color: "bg-gray-200 text-gray-800" },
   ];
-  console.log("Component state:", {
-    hasToken: !!token,
-    userRole,
-    userId,
-    isTokenValid: tokenUtils.isTokenValid(),
-  });
 
   const handleReassign = async (ticketId: string, operatorId: string) => {
     try {
@@ -57,8 +57,8 @@ const TicketTable = () => {
   };
 
   const handleStatusChange = (ticketId: string, newStatus: TicketStatus) => {
-    // реализуй при необходимости мутацию на изменение статуса
     console.log(`Изменение статуса: тикет ${ticketId} → ${newStatus}`);
+    // Здесь реализуйте мутацию, если нужно
   };
 
   const getStatusStyle = (status: TicketStatus) => {
@@ -68,6 +68,7 @@ const TicketTable = () => {
 
   if (!token) return <div>Требуется авторизация</div>;
   if (!tokenUtils.isTokenValid()) return <div>Токен истёк, обновляем...</div>;
+  if (!roleChecked) return <div>Загрузка данных пользователя...</div>;
   if (isLoading) return <div>Загрузка билетов...</div>;
   if (isError) return <div>Ошибка при загрузке: {error?.toString()}</div>;
 

@@ -27,8 +27,8 @@ const api = index.injectEndpoints({
     }),
     ticketAssign: build.mutation<void, { ticketId: string; operatorId: string }>({
       query: ({ ticketId, operatorId }) => ({
-        url: "/tickets/${ticketId}/assign",
-        method: "PUTCH",
+        url: `/ticket/${ticketId}/assign`,
+        method: "PATCH",
         body: { operatorId },
         credentials: "include",
         headers: {
