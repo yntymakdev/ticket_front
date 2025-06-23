@@ -18,17 +18,18 @@ export interface ITicket {
 }
 
 // Назначение тикета
-export interface IAssignment {
-  id: string;
-  assignedTo: string;
-  assignedBy: IUser;
-  createdAt: string;
-}
+// export interface IAssignment {
+//   id: string;
+//   assignedTo: string;
+//   assignedBy: IUser;
+//   createdAt: string;
+// }
 
 export namespace TICKET {
   // --- Запросы ---
   export type GetAllRequest = void;
   export type GetAllResponse = ITicket[];
+  export type GetStatusResponse = UpdateTicketStatusRequest[];
 
   export interface CreateTicketRequest {
     title: string;

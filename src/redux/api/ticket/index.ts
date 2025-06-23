@@ -37,6 +37,18 @@ const api = index.injectEndpoints({
         providesTags: ["ticket"],
       }),
     }),
+    UpdateTicketStatus: build.mutation<TICKET.GetStatusResponse, TICKET.UpdateTicketStatusRequest>({
+      query: ({ id, status }) => ({
+        url: `/ticket/${id}/status`,
+        method: "PATCH",
+        body: { status },
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        providesTags: ["ticket"],
+      }),
+    }),
 
     // register: build.mutation<AUTH.PostRegisterResponse, AUTH.PostRegisterRequest>({
     //   query: (registerData) => ({
@@ -49,4 +61,5 @@ const api = index.injectEndpoints({
   }),
 });
 
-export const { useTicketcreateMutation, useTicketgetQuery, useTicketAssignMutation } = api;
+export const { useTicketcreateMutation, useUpdateTicketStatusMutation, useTicketgetQuery, useTicketAssignMutation } =
+  api;
