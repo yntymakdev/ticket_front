@@ -1,45 +1,75 @@
 "use client";
+import Cookies from "js-cookie";
+import React, { useEffect } from "react";
+import { useTicketAssignMutation, useTicketgetQuery } from "@/redux/api/ticket";
 
-import { useTicketgetQuery } from "@/redux/api/ticket";
-import { IAssignment, TicketStatus } from "@/types/ticket.types";
-import { IUser } from "@/types/user.types";
-import React from "react";
-export interface ITicket {
-  id: string;
-  title: string;
-  description: string;
-  customerName: string;
-  status: TicketStatus;
-  createdAt: string;
-  updatedAt: string;
-  createdById: string;
-  createdBy: IUser;
-  assignments: IAssignment[];
-}
+import { ITicket } from "@/redux/api/ticket/types";
+import { TicketStatus } from "@/types/ticket.types";
+import { tokenUtils } from "@/hooks/useAuth";
+import { useOperatorsQuery } from "@/redux/api/user";
+import { skipToken } from "@reduxjs/toolkit/query";
 
-const TicketTable = ({ tickets, setTickets }: { tickets: any[]; setTickets: (value: any[]) => void }) => {
-  useTicketgetQuery();
-  const allOperators = ["Айбек", "Светлана", "Нурислам", "Адилет"];
+const TicketTable = () => {
+  const token = Cookies.get("accessToken");
+  const userRole = tokenUtils.getUserRole();
+  const userId = tokenUtils.getUserId();
+
+  const {
+    data: tickets = [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+  } = useTicketgetQuery(undefined, {
+    skip: !token || !tokenUtils.isTokenValid(),
+    refetchOnMountOrArgChange: true,
+  });
+
+  const { data: operators = [] } = useOperatorsQuery();
+  const [assignTicket] = useTicketAssignMutation();
+
+  useEffect(() => {
+    if (token && tokenUtils.isTokenValid()) {
+      refetch();
+    }
+  }, [token, refetch]);
+
   const statusOptions = [
-    { value: "open", label: "Открыт", color: "bg-green-100 text-green-800" },
-    { value: "in_progress", label: "В процессе", color: "bg-blue-100 text-blue-800" },
-    { value: "closed", label: "Закрыт", color: "bg-gray-200 text-gray-800" },
+    { value: TicketStatus.OPEN, label: "Открыт", color: "bg-green-100 text-green-800" },
+    { value: TicketStatus.IN_PROGRESS, label: "В процессе", color: "bg-blue-100 text-blue-800" },
+    { value: TicketStatus.CLOSED, label: "Закрыт", color: "bg-gray-200 text-gray-800" },
   ];
+  console.log("Component state:", {
+    hasToken: !!token,
+    userRole,
+    userId,
+    isTokenValid: tokenUtils.isTokenValid(),
+  });
 
-  const handleReassign = (ticketId: number, newOperator: string) => {
-    const updated = tickets.map((ticket) => (ticket.id === ticketId ? { ...ticket, assignedTo: newOperator } : ticket));
-    setTickets(updated);
+  const handleReassign = async (ticketId: string, operatorId: string) => {
+    try {
+      await assignTicket({ ticketId, operatorId }).unwrap();
+      alert("Оператор назначен успешно");
+    } catch (err) {
+      console.error("Ошибка при назначении:", err);
+      alert("Ошибка при назначении");
+    }
   };
 
-  const handleStatusChange = (ticketId: number, newStatus: string) => {
-    const updated = tickets.map((ticket) => (ticket.id === ticketId ? { ...ticket, status: newStatus } : ticket));
-    setTickets(updated);
+  const handleStatusChange = (ticketId: string, newStatus: TicketStatus) => {
+    // реализуй при необходимости мутацию на изменение статуса
+    console.log(`Изменение статуса: тикет ${ticketId} → ${newStatus}`);
   };
 
-  const getStatusStyle = (status: string) => {
+  const getStatusStyle = (status: TicketStatus) => {
     const found = statusOptions.find((s) => s.value === status);
     return found?.color || "bg-gray-100 text-gray-800";
   };
+
+  if (!token) return <div>Требуется авторизация</div>;
+  if (!tokenUtils.isTokenValid()) return <div>Токен истёк, обновляем...</div>;
+  if (isLoading) return <div>Загрузка билетов...</div>;
+  if (isError) return <div>Ошибка при загрузке: {error?.toString()}</div>;
 
   return (
     <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
@@ -54,38 +84,51 @@ const TicketTable = ({ tickets, setTickets }: { tickets: any[]; setTickets: (val
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {tickets.map((ticket) => (
-              <tr key={ticket.id} className="hover:bg-gray-50 transition-colors">
-                <td className="py-3 px-6 text-gray-900">{ticket.title}</td>
-                <td className="py-3 px-6 text-gray-700">{ticket.customer}</td>
-                <td className="py-3 px-6">
-                  <select
-                    value={ticket.status}
-                    onChange={(e) => handleStatusChange(ticket.id, e.target.value)}
-                    className={`rounded-full px-3 py-1 text-sm font-medium ${getStatusStyle(ticket.status)}`}
-                  >
-                    {statusOptions.map((status) => (
-                      <option key={status.value} value={status.value}>
-                        {status.label}
-                      </option>
-                    ))}
-                  </select>
-                </td>
-                <td className="py-3 px-6">
-                  <select
-                    value={ticket.assignedTo}
-                    onChange={(e) => handleReassign(ticket.id, e.target.value)}
-                    className="border border-gray-300 rounded-md px-3 py-1 text-sm bg-white"
-                  >
-                    {allOperators.map((op) => (
-                      <option key={op} value={op}>
-                        {op}
-                      </option>
-                    ))}
-                  </select>
+            {tickets.length === 0 ? (
+              <tr>
+                <td colSpan={4} className="py-8 px-6 text-center text-gray-500">
+                  Тикеты не найдены
                 </td>
               </tr>
-            ))}
+            ) : (
+              tickets.map((ticket: ITicket) => (
+                <tr key={ticket.id} className="hover:bg-gray-50 transition-colors">
+                  <td className="py-3 px-6 text-gray-900">{ticket.title}</td>
+                  <td className="py-3 px-6 text-gray-700">{ticket.customerName}</td>
+                  <td className="py-3 px-6">
+                    <select
+                      value={ticket.status}
+                      onChange={(e) => handleStatusChange(ticket.id, e.target.value as TicketStatus)}
+                      className={`rounded-full px-3 py-1 text-sm font-medium ${getStatusStyle(ticket.status)}`}
+                    >
+                      {statusOptions.map((status) => (
+                        <option key={status.value} value={status.value}>
+                          {status.label}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
+                  <td className="py-3 px-6">
+                    {userRole === "SUPERVISOR" ? (
+                      <select
+                        value={ticket.assignments?.[0]?.assignedTo || ""}
+                        onChange={(e) => handleReassign(ticket.id, e.target.value)}
+                        className="border border-gray-300 rounded-md px-3 py-1 text-sm bg-white"
+                      >
+                        <option value="">Не назначен</option>
+                        {operators.map((op: any) => (
+                          <option key={op.id} value={op.id}>
+                            {op.email}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <span className="text-gray-500">Нет доступа</span>
+                    )}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

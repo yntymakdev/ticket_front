@@ -1,4 +1,5 @@
-import { IAssignment, IComment, ITicket } from "./ticket.types";
+import { ITicket } from "@/redux/api/ticket/types";
+import { IAssignment, IComment } from "./ticket.types";
 
 export enum Role {
   OPERATOR = "OPERATOR",

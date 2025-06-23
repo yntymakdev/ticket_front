@@ -35,8 +35,11 @@ export namespace AUTH {
     password: string;
   }
 
-  export interface PatchRefreshTokenResponse extends ITokens {
+  export interface PostRefreshTokenResponse extends ITokens {
     email: string;
     password: string;
+  }
+  export interface PostRefreshTokenRequest {
+    refreshToken: string;
   }
 }

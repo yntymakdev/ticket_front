@@ -1,81 +1,161 @@
-// import { api } from "@/redux/api";
-// import { useEffect, useState } from "react";
+// import Cookies from "js-cookie";
+// export const tokenUtils = {
+//   // Получить роль из токена
+//   getUserRole: (): string | null => {
+//     const token = Cookies.get("accessToken");
+//     if (!token) return null;
 
-// function getCookie(name: string): string | null {
-//   if (typeof document === "undefined") return null;
-//   const value = `; ${document.cookie}`;
-//   const parts = value.split(`; ${name}=`);
-//   if (parts.length === 2) return parts.pop()?.split(";").shift() || null;
-//   return null;
-// }
-
-// function setCookie(name: string, value: string, days: number = 7): void {
-//   if (typeof document === "undefined") return;
-//   const expires = new Date(Date.now() + days * 864e5).toUTCString();
-//   document.cookie = `${name}=${value}; expires=${expires}; path=/; SameSite=Strict; Secure`;
-// }
-
-// function deleteCookie(name: string): void {
-//   if (typeof document === "undefined") return;
-//   document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
-// }
-
-// export const useAuth = () => {
-//   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-//   const [isLoading, setIsLoading] = useState<boolean>(true);
-
-//   // Используйте мутации из вашего API
-//   const [login] = api.useLoginMutation();
-//   const [logout] = api.useLogoutMutation();
-
-//   // Проверяем наличие токена при загрузке
-//   useEffect(() => {
-//     const token = getCookie("accessToken");
-//     setIsAuthenticated(!!token);
-//     setIsLoading(false);
-//   }, []);
-
-//   const handleLogin = async (credentials: { email: string; password: string }) => {
 //     try {
-//       const result = await login(credentials).unwrap();
-//       setIsAuthenticated(true);
-//       return result;
-//     } catch (error) {
-//       console.error("Ошибка входа:", error);
-//       throw error;
+//       const payload = JSON.parse(atob(token.split(".")[1]));
+//       return payload.role || null;
+//     } catch (e) {
+//       console.error("Error parsing token for role:", e);
+//       return null;
 //     }
-//   };
+//   },
 
-//   const handleLogout = async () => {
+//   // Получить ID пользователя из токена
+//   getUserId: (): string | null => {
+//     const token = Cookies.get("accessToken");
+//     if (!token) return null;
+
 //     try {
-//       await logout().unwrap();
-//     } catch (error) {
-//       console.error("Ошибка выхода:", error);
-//     } finally {
-//       setIsAuthenticated(false);
+//       const payload = JSON.parse(atob(token.split(".")[1]));
+//       return payload.userId || payload.sub || null;
+//     } catch (e) {
+//       console.error("Error parsing token for userId:", e);
+//       return null;
 //     }
-//   };
+//   },
 
-//   const setToken = (token: string, refreshToken?: string) => {
-//     setCookie("accessToken", token);
-//     if (refreshToken) {
-//       setCookie("refreshToken", refreshToken);
+//   // Проверить валидность токена
+//   isTokenValid: (): boolean => {
+//     const token = Cookies.get("accessToken");
+//     if (!token) return false;
+
+//     try {
+//       const payload = JSON.parse(atob(token.split(".")[1]));
+//       const now = Math.floor(Date.now() / 1000);
+//       return payload.exp > now;
+//     } catch (e) {
+//       return false;
 //     }
-//     setIsAuthenticated(true);
-//   };
+//   },
 
-//   const clearTokens = () => {
-//     deleteCookie("accessToken");
-//     deleteCookie("refreshToken");
-//     setIsAuthenticated(false);
-//   };
-
-//   return {
-//     isAuthenticated,
-//     isLoading,
-//     login: handleLogin,
-//     logout: handleLogout,
-//     setToken,
-//     clearTokens,
-//   };
+//   // Очистить все токены
+//   clearTokens: () => {
+//     Cookies.remove("accessToken");
+//     Cookies.remove("refreshToken");
+//   },
 // };
+
+import Cookies from "js-cookie";
+
+export const tokenUtils = {
+  // Получить роль из токена
+  getUserRole: (): string | null => {
+    const token = Cookies.get("accessToken");
+    if (!token) {
+      console.log("❌ No token found for role extraction");
+      return null;
+    }
+
+    try {
+      const parts = token.split(".");
+      if (parts.length !== 3) {
+        console.error("❌ Invalid token format");
+        return null;
+      }
+
+      const payload = JSON.parse(atob(parts[1]));
+      console.log("✅ Full token payload:", payload);
+
+      // Список возможных полей с ролью
+      const possibleRoles = [
+        payload.role,
+        payload.userRole,
+        payload.authority,
+        Array.isArray(payload.authorities) ? payload.authorities[0] : undefined,
+      ];
+
+      const role = possibleRoles.find((r) => typeof r === "string");
+
+      if (!role) {
+        console.warn("⚠️ Роль не найдена в токене");
+      } else {
+        console.log("✅ Extracted role:", role);
+      }
+
+      return role || null;
+    } catch (e) {
+      console.error("❌ Error parsing token for role:", e);
+      return null;
+    }
+  },
+  // Получить ID пользователя из токена
+  getUserId: (): string | null => {
+    const token = Cookies.get("accessToken");
+    if (!token) {
+      console.log("No token found for userId extraction");
+      return null;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const userId = payload.userId || payload.sub || payload.id || payload.user_id;
+      console.log("Extracted userId:", userId);
+      return userId || null;
+    } catch (e) {
+      console.error("Error parsing token for userId:", e);
+      return null;
+    }
+  },
+
+  // Проверить валидность токена
+  isTokenValid: (): boolean => {
+    const token = Cookies.get("accessToken");
+    if (!token) {
+      console.log("No token to validate");
+      return false;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1]));
+      const now = Math.floor(Date.now() / 1000);
+      const isValid = payload.exp > now;
+
+      console.log("Token validation:", {
+        exp: payload.exp,
+        now: now,
+        expiresAt: new Date(payload.exp * 1000),
+        isValid: isValid,
+      });
+
+      return isValid;
+    } catch (e) {
+      console.error("Error validating token:", e);
+      return false;
+    }
+  },
+
+  // Очистить все токены
+  clearTokens: () => {
+    console.log("Clearing all tokens");
+    Cookies.remove("acce    ssToken");
+    Cookies.remove("refreshToken");
+    console.log("✅ Full token payload:");
+  },
+
+  // Получить весь payload токена для отладки
+  getTokenPayload: () => {
+    const token = Cookies.get("accessToken");
+    if (!token) return null;
+
+    try {
+      return JSON.parse(atob(token.split(".")[1]));
+    } catch (e) {
+      console.error("Error parsing token payload:", e);
+      return null;
+    }
+  },
+};

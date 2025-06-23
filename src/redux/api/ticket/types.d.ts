@@ -1,7 +1,7 @@
 import { IUser } from "@/types/user.types";
 
 // Тип статуса тикета
-export type TicketStatus = "OPEN" | "IN_PROGRESS" | "CLOSED";
+// export type TicketStatus = "OPEN" | "IN_PROGRESS" | "CLOSED";
 
 // Основной тип одного тикета
 export interface ITicket {
@@ -20,7 +20,7 @@ export interface ITicket {
 // Назначение тикета
 export interface IAssignment {
   id: string;
-  assignedTo: IUser;
+  assignedTo: string;
   assignedBy: IUser;
   createdAt: string;
 }

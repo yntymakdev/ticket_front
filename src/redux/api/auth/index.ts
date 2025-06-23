@@ -21,6 +21,32 @@ const api = index.injectEndpoints({
       }),
       invalidatesTags: ["auth"],
     }),
+    refresh: build.mutation<AUTH.PostRegisterResponse, AUTH.PostRegisterRequest>({
+      query: (refreshData) => ({
+        url: "/auth/login/access-token",
+        method: "POST",
+        body: refreshData,
+      }),
+      // async onQueryStarted(refreshData, { queryFulfilled }) {
+      //   try {
+      //     const { data } = await queryFulfilled;
+      //     Cookies.set("accessToken", data.accessToken, {
+      //       path: "/",
+      //       sameSite: "Lax",
+      //     });
+
+      //     Cookies.set("refreshToken", data.refreshToken, {
+      //       path: "/",
+      //       sameSite: "Lax",
+      //     });
+
+      //     console.log("✅ Refresh tokens updated");
+      //   } catch (error) {
+      //     console.error("❌ Failed to refresh token:", error);
+      //   }
+      // },
+      invalidatesTags: ["auth"],
+    }),
   }),
 });
 

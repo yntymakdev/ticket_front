@@ -1,17 +1,14 @@
 import { IUser } from "./user.types";
 
-export interface ITicket {
-  id: String;
-  title: String;
-  description: String;
-  customerName: String;
-  status: TicketStatus;
-  // createdById: String;
-  // createdBy: IUser;
-  // comments: IComment[];
-  assignments: IAssignment[];
-  assignedTo: string;
-}
+// export interface ITicket {
+//   id: string; // Изменил String на string для консистентности
+//   title: string;
+//   description: string;
+//   customerName: string;
+//   status: TicketStatus;
+//   assignments: IAssignment[];
+//   assignedTo?: string; // Сделал опциональным
+// }
 export interface CreateTicketDto {
   title: string;
   description: string;

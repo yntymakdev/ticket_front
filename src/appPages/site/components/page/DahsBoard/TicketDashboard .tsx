@@ -11,24 +11,6 @@ const TicketsDashboard = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState("Status");
   const [open, setOpen] = useState(false);
-  const [tickets, setTickets] = useState([
-    {
-      id: 1,
-      title: "Ошибка логина",
-      customer: "Айсулуу",
-      status: "Open",
-      statusColor: "bg-green-100 text-green-800",
-      assignedTo: "Айбек",
-    },
-    {
-      id: 2,
-      title: "Проблема с оплатой",
-      customer: "Бекзат",
-      status: "In Progress",
-      statusColor: "bg-blue-100 text-blue-800",
-      assignedTo: "Светлана",
-    },
-  ]);
 
   return (
     <div className="flex h-screen bg-gray-50">
@@ -61,7 +43,7 @@ const TicketsDashboard = () => {
 
         <AddTicketDialog open={open} setOpen={setOpen} />
         <main className="flex-1 overflow-auto p-4">
-          <TicketTable tickets={tickets} setTickets={setTickets} />
+          <TicketTable />
         </main>
       </div>
     </div>

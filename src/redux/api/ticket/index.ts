@@ -19,13 +19,23 @@ const api = index.injectEndpoints({
       query: (ticketData) => ({
         url: "/ticket/tickets",
         method: "GET",
-        body: ticketData,
-
         headers: {
           "Content-Type": "application/json",
         },
       }),
       providesTags: ["ticket"],
+    }),
+    ticketAssign: build.mutation<void, { ticketId: string; operatorId: string }>({
+      query: ({ ticketId, operatorId }) => ({
+        url: "/tickets/${ticketId}/assign",
+        method: "PUTCH",
+        body: { operatorId },
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        providesTags: ["ticket"],
+      }),
     }),
 
     // register: build.mutation<AUTH.PostRegisterResponse, AUTH.PostRegisterRequest>({
@@ -39,4 +49,4 @@ const api = index.injectEndpoints({
   }),
 });
 
-export const { useTicketcreateMutation,useTicketgetQuery } = api;
+export const { useTicketcreateMutation, useTicketgetQuery, useTicketAssignMutation } = api;
