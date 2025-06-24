@@ -1,30 +1,52 @@
-// hooks/useTickets.ts
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useTicketgetQuery } from "@/redux/api/ticket";
-import { ITicket } from "@/redux/api/ticket/types";
+import { TicketItem } from "@/redux/api/ticket/types";
 import Cookies from "js-cookie";
 import { tokenUtils } from "@/hooks/useAuth";
 
-export const useTickets = () => {
+interface UseTicketsProps {
+  searchQuery?: string;
+  statusFilter?: string;
+}
+
+export const useTickets = (props?: UseTicketsProps) => {
+  const { searchQuery = "", statusFilter = "Status" } = props || {};
   const token = Cookies.get("accessToken");
+
+  const apiParams = useMemo(() => {
+    const params: any = {};
+
+    if (searchQuery.trim()) {
+      params.searchQuery = searchQuery.trim();
+    }
+
+    if (statusFilter && statusFilter !== "Status") {
+      params.status = statusFilter;
+    }
+
+    return Object.keys(params).length > 0 ? params : undefined;
+  }, [searchQuery, statusFilter]);
+
   const {
     data: tickets = [],
     isLoading,
     isError,
     error,
     refetch,
-  } = useTicketgetQuery(undefined, {
+  } = useTicketgetQuery(apiParams, {
     skip: !token || !tokenUtils.isTokenValid(),
     refetchOnMountOrArgChange: true,
   });
 
-  const [localTickets, setLocalTickets] = useState<ITicket[]>([]);
+  const [localTickets, setLocalTickets] = useState<TicketItem[]>([]);
 
   useEffect(() => {
-    if (tickets.length > 0) {
-      setLocalTickets(tickets);
+    const same = localTickets.length === tickets.length && localTickets.every((t, i) => t.id === tickets[i]?.id);
+
+    if (!same) {
+      setLocalTickets(tickets || []);
     }
-  }, [tickets]);
+  }, [tickets, localTickets]);
 
   return {
     token,

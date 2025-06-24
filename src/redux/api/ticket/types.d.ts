@@ -27,6 +27,14 @@ export interface IComment {
     role: string;
   };
 }
+export interface IDeleteTicket {
+  id: string;
+  ticketId: string;
+}
+export interface GetAllRequestDeleteTicket {
+  id: string;
+  ticketId: string;
+}
 
 // Назначение тикета
 // export interface IAssignment {
@@ -53,9 +61,30 @@ export interface IPostCommentRequest {
   id: string;
   message: string;
 }
+
+export interface TicketItem {
+  id: string;
+  title: string;
+  status: string;
+  customerName: string;
+  createdAt: string;
+  updatedAt: string;
+  createdById: string;
+  createdBy: IUser;
+  assignments: IAssignment[];
+}
+
+export interface GetAllRequestSearch {
+  searchQuery?: string;
+  status?: string;
+}
+
 export namespace TICKET {
   // --- Запросы ---
-  export type GetAllRequest = void;
+  export type GetAllRequest = {
+    searchQuery?: string;
+    status?: string;
+  };
   export type GetAllResponse = ITicket[];
   export type GetStatusResponse = UpdateTicketStatusRequest[];
   export type GetCommentRequest = IPostCommentRequest[];

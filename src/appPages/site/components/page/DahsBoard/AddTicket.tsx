@@ -16,13 +16,7 @@ interface AddTicketDialogProps {
 }
 
 const AddTicketDialog: React.FC<AddTicketDialogProps> = ({ open, setOpen, userRole }) => {
-  // Добавляем отладку
-  console.log("AddTicketDialog userRole:", userRole);
-  console.log("userRole type:", typeof userRole);
-  console.log("Is SUPERVISOR?", userRole === "SUPERVISOR");
-
   // Если роль SUPERVISOR — не показываем ничего (проверяем разные варианты)
-  if (userRole?.toLowerCase().trim() === "supervisor") return null;
 
   const statuses = [
     { label: "Open", value: TicketStatus.OPEN },
@@ -69,95 +63,97 @@ const AddTicketDialog: React.FC<AddTicketDialogProps> = ({ open, setOpen, userRo
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="outline" className="flex items-center gap-2">
-          <Plus className="w-4 h-4 text-blue-500" />
-          Добавить билет
-        </Button>
-      </DialogTrigger>
+    <>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogTrigger asChild>
+          <Button variant="outline" className="flex items-center gap-2">
+            <Plus className="w-4 h-4 text-blue-500" />
+            Добавить билет
+          </Button>
+        </DialogTrigger>
 
-      <DialogOverlay className="fixed inset-0 bg-white/30 backdrop-blur-md z-40" />
+        <DialogOverlay className="fixed inset-0 bg-white/30 backdrop-blur-md z-40" />
 
-      <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl shadow-xl z-50 w-full max-w-md p-6">
-        <DialogHeader>
-          <DialogTitle className="text-lg font-semibold">Добавить новый билет</DialogTitle>
-          <DialogDescription className="text-sm text-gray-500">
-            Заполните форму, чтобы создать задачу.
-          </DialogDescription>
-        </DialogHeader>
+        <DialogContent className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white rounded-xl shadow-xl z-50 w-full max-w-md p-6">
+          <DialogHeader>
+            <DialogTitle className="text-lg font-semibold">Добавить новый билет</DialogTitle>
+            <DialogDescription className="text-sm text-gray-500">
+              Заполните форму, чтобы создать задачу.
+            </DialogDescription>
+          </DialogHeader>
 
-        <form className="grid gap-4 py-4" onSubmit={handleSubmit}>
-          <div className="grid gap-1">
-            <label htmlFor="title" className="text-sm font-medium text-gray-700">
-              Название билета
-            </label>
-            <Input
-              id="title"
-              placeholder="Например: Проблема с логином"
-              required
-              value={ticketData.title}
-              onChange={handleChange}
-            />
-          </div>
+          <form className="grid gap-4 py-4" onSubmit={handleSubmit}>
+            <div className="grid gap-1">
+              <label htmlFor="title" className="text-sm font-medium text-gray-700">
+                Название билета
+              </label>
+              <Input
+                id="title"
+                placeholder="Например: Проблема с логином"
+                required
+                value={ticketData.title}
+                onChange={handleChange}
+              />
+            </div>
 
-          <div className="grid gap-1">
-            <label htmlFor="customerName" className="text-sm font-medium text-gray-700">
-              Имя клиента
-            </label>
-            <Input
-              id="customerName"
-              placeholder="Введите имя клиента"
-              required
-              value={ticketData.customerName}
-              onChange={handleChange}
-            />
-          </div>
+            <div className="grid gap-1">
+              <label htmlFor="customerName" className="text-sm font-medium text-gray-700">
+                Имя клиента
+              </label>
+              <Input
+                id="customerName"
+                placeholder="Введите имя клиента"
+                required
+                value={ticketData.customerName}
+                onChange={handleChange}
+              />
+            </div>
 
-          <div className="grid gap-1">
-            <label htmlFor="description" className="text-sm font-medium text-gray-700">
-              Описание
-            </label>
-            <Input
-              id="description"
-              placeholder="Введите описание"
-              required
-              value={ticketData.description}
-              onChange={handleChange}
-            />
-          </div>
+            <div className="grid gap-1">
+              <label htmlFor="description" className="text-sm font-medium text-gray-700">
+                Описание
+              </label>
+              <Input
+                id="description"
+                placeholder="Введите описание"
+                required
+                value={ticketData.description}
+                onChange={handleChange}
+              />
+            </div>
 
-          <div className="grid gap-1">
-            <label htmlFor="status" className="text-sm font-medium text-gray-700">
-              Статус
-            </label>
-            <select
-              id="status"
-              value={ticketData.status}
-              onChange={handleChange}
-              className="border border-gray-300 rounded-md px-3 py-2"
-            >
-              {statuses.map((s) => (
-                <option key={s.value} value={s.value}>
-                  {s.label}
-                </option>
-              ))}
-            </select>
-          </div>
+            <div className="grid gap-1">
+              <label htmlFor="status" className="text-sm font-medium text-gray-700">
+                Статус
+              </label>
+              <select
+                id="status"
+                value={ticketData.status}
+                onChange={handleChange}
+                className="border border-gray-300 rounded-md px-3 py-2"
+              >
+                {statuses.map((s) => (
+                  <option key={s.value} value={s.value}>
+                    {s.label}
+                  </option>
+                ))}
+              </select>
+            </div>
 
-          <DialogFooter className="flex justify-end gap-2 pt-4">
-            <DialogClose asChild>
-              <Button variant="outline" type="button">
-                Отмена
+            <DialogFooter className="flex justify-end gap-2 pt-4">
+              <DialogClose asChild>
+                <Button variant="outline" type="button">
+                  Отмена
+                </Button>
+              </DialogClose>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading ? "Сохраняем..." : "Сохранить"}
               </Button>
-            </DialogClose>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? "Сохраняем..." : "Сохранить"}
-            </Button>
-          </DialogFooter>
-        </form>
-      </DialogContent>
-    </Dialog>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 

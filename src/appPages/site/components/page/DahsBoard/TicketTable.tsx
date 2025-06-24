@@ -1,4 +1,3 @@
-// components/TicketTable.tsx
 "use client";
 import React, { useEffect, useState } from "react";
 import { useOperatorsQuery } from "@/redux/api/user";
@@ -8,12 +7,13 @@ import { useTickets } from "@/hooks/useTickets";
 import { useAssignTicket } from "@/hooks/useAssignTicket";
 import TicketList from "./TicketList";
 import { useUpdateTicketStatus } from "@/hooks/useUpdateTicketStatus";
-
-const TicketTable = () => {
+interface TicketTableProps {
+  searchQuery: string;
+}
+const TicketTable: React.FC<TicketTableProps> = ({ searchQuery }) => {
   const [userRole, setUserRole] = useState<string | null>(null);
   const [roleChecked, setRoleChecked] = useState(false);
-
-  const { token, isLoading, isError, error, refetch, localTickets, setLocalTickets } = useTickets();
+  const { token, isLoading, isError, error, refetch, localTickets, setLocalTickets } = useTickets({ searchQuery });
 
   const { data: operators = [] } = useOperatorsQuery();
   const { assign } = useAssignTicket();
@@ -29,7 +29,6 @@ const TicketTable = () => {
       setRoleChecked(true);
     }
   }, [token, refetch]);
-
   const handleReassign = (ticketId: string, operatorId: string) => {
     assign(ticketId, operatorId, (id: any, opId: any) => {
       setLocalTickets((prev: any[]) =>
@@ -51,27 +50,7 @@ const TicketTable = () => {
       );
     });
   };
-
-  // const handleStatusChange = (ticketId: string, status: TicketStatus) => {
-  //   console.log(`Изменение статуса тикета ${ticketId} → ${status}`);
-  //   // можно добавить обновление статуса через API
-  // };
-
-  //? if (!token) return <div>Требуется авторизация</div>;
-  // if (!tokenUtils.isTokenValid()) return <div>Токен истёк, обновляем...</div>;
-  // if (!roleChecked) return <div>Загрузка данных пользователя...</div>;
-  // if (isLoading) return <div>Загрузка билетов...</div>;
-  // if (isError) return <div>Ошибка при загрузке: {error?.toString()}</div>;
-
-  return (
-    <TicketList
-      tickets={localTickets}
-      userRole={userRole}
-      operators={operators}
-      onReassign={handleReassign}
-      // onStatusChange={handleStatusChange}
-    />
-  );
+  return <TicketList tickets={localTickets} userRole={userRole} operators={operators} onReassign={handleReassign} />;
 };
 
 export default TicketTable;

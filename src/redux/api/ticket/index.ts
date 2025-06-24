@@ -1,5 +1,15 @@
 import { api as index } from "..";
-import { IComment, ICommentGet, IPostCommentRequest, ITicket, TICKET } from "./types";
+import {
+  GetAllRequestDeleteTicket,
+  GetAllRequestSearch,
+  IComment,
+  ICommentGet,
+  IDeleteTicket,
+  IPostCommentRequest,
+  ITicket,
+  TICKET,
+  TicketItem,
+} from "./types";
 
 const api = index.injectEndpoints({
   endpoints: (build) => ({
@@ -16,13 +26,25 @@ const api = index.injectEndpoints({
       invalidatesTags: ["ticket"],
     }),
     ticketget: build.query<TICKET.GetAllResponse, TICKET.GetAllRequest>({
-      query: (ticketData) => ({
-        url: "/ticket/tickets",
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }),
+      query: (params) => {
+        const searchParams = new URLSearchParams();
+
+        if (params?.searchQuery) {
+          searchParams.append("searchQuery", params.searchQuery);
+        }
+
+        if (params?.status && params.status !== "Status") {
+          searchParams.append("status", params.status);
+        }
+
+        return {
+          url: `/ticket/tickets${searchParams.toString() ? `?${searchParams.toString()}` : ""}`,
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+      },
       providesTags: ["ticket"],
     }),
     ticketAssign: build.mutation<void, { ticketId: string; operatorId: string }>({
@@ -83,6 +105,17 @@ const api = index.injectEndpoints({
         providesTags: ["ticket"],
       }),
     }),
+    DeleteTicket: build.mutation<{ message: string }, string>({
+      query: (ticketId) => ({
+        url: `/ticket/${ticketId}`,
+        method: "DELETE",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }),
+      invalidatesTags: ["ticket"],
+    }),
   }),
 });
 
@@ -94,4 +127,5 @@ export const {
   useTicketDetailQuery,
   useTicketCommentMutation,
   useGetCommentQuery,
+  useDeleteTicketMutation,
 } = api;
