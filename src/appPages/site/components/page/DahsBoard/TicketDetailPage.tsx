@@ -1,71 +1,3 @@
-// "use client";
-// import React, { useState } from "react";
-// import { Menu, X, ChevronRight, ChevronDown, ArrowLeft } from "lucide-react";
-// import Sidebar from "./Sidebar";
-// import { useParams } from "next/navigation";
-// import { useTicketDetailQuery } from "@/redux/api/ticket";
-// import Link from "next/link";
-
-//? Sidebar Component
-// const Sidebar = ({ isOpen, onClose }) => {
-//   const menuItems = [
-//     { id: 'tickets', label: 'Tickets', active: true },
-//     { id: 'dashboard', label: 'Dashboard', active: false }
-//   ];
-
-//   return (
-//     <>
-//       {/* Mobile Overlay */}
-//       {isOpen && (
-//         <div
-//           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
-//           onClick={onClose}
-//         />
-//       )}
-
-//       {/* Sidebar */}
-//       <div className={`
-//         fixed top-0 left-0 h-full w-64 sm:w-64 bg-slate-900 text-white z-50 transform transition-transform duration-300 ease-in-out
-//         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
-//         lg:translate-x-0 lg:static lg:z-auto
-//         max-w-[85vw]
-//       `}>
-//         {/* Mobile Close Button */}
-//         <div className="flex items-center justify-between p-4 lg:hidden">
-//           <h2 className="text-lg font-semibold">Menu</h2>
-//           <button
-//             onClick={onClose}
-//             className="p-1 rounded-md hover:bg-slate-800"
-//           >
-//             <X size={20} />
-//           </button>
-//         </div>
-
-//         {/* Menu Items */}
-//         <nav className="p-2 sm:p-4 space-y-1 sm:space-y-2">
-//           {menuItems.map((item) => (
-//             <div
-//               key={item.id}
-//               className={`
-//                 flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg cursor-pointer transition-colors text-sm sm:text-base
-//                 ${item.active
-//                   ? 'bg-slate-800 text-white'
-//                   : 'text-slate-300 hover:bg-slate-800 hover:text-white'
-//                 }
-//               `}
-//             >
-//               <div className="w-2 h-2 rounded-full bg-current opacity-60 flex-shrink-0" />
-//               <span className="font-medium truncate">{item.label}</span>
-//             </div>
-//           ))}
-//         </nav>
-//       </div>
-//     </>
-//   );
-// };
-
-// Main Ticket Detail
-
 "use client";
 import React, { useState } from "react";
 import { Menu, ArrowLeft, ChevronDown, ChevronRight } from "lucide-react";
@@ -77,7 +9,6 @@ import { IComment } from "@/redux/api/ticket/types";
 
 const TicketDetailPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [status, setStatus] = useState("Open");
   const [newComment, setNewComment] = useState("");
 
   const params = useParams();
@@ -126,19 +57,6 @@ const TicketDetailPage = () => {
 
               <h1 className="text-2xl font-bold text-gray-900 truncate">{ticket.title}</h1>
             </div>
-
-            <div className="relative">
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 text-sm focus:ring-2 focus:ring-blue-500"
-              >
-                <option>Open</option>
-                <option>In Progress</option>
-                <option>Closed</option>
-              </select>
-              <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-            </div>
           </div>
         </header>
 
@@ -152,7 +70,7 @@ const TicketDetailPage = () => {
                 </div>
 
                 <div className="flex items-center justify-between border-t pt-3">
-                  <span className="text-gray-900 font-medium">{status}</span>
+                  <span className="text-gray-900 font-medium">{ticket.status}</span>
                   <ChevronRight className="text-gray-400 w-5 h-5" />
                 </div>
               </div>
@@ -167,8 +85,9 @@ const TicketDetailPage = () => {
                 {comments.map((comment: IComment) => (
                   <div key={comment.id} className="bg-gray-50 rounded-lg p-4">
                     <div className="flex items-center gap-2 mb-1">
-                      <span className="font-medium text-sm text-gray-900">{comment.userId}</span>
-                      {/* В идеале заменить userId на user.email если доступно */}
+                      <span className="font-medium text-sm text-gray-900">{comment.user.email}</span>
+
+                      <span className="font-medium text-sm text-gray-900">{comment.user.role}</span>
                     </div>
                     <p className="text-sm text-gray-700">{comment.message}</p>
                   </div>

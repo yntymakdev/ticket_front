@@ -1,13 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { Dispatch, SetStateAction, useState } from "react";
 import { Menu, Search } from "lucide-react";
 import Sidebar from "./Sidebar";
 import CustomSelect from "@/ui/CustomSelect";
 import AddTicketDialog from "./AddTicket";
 import TicketTable from "./TicketTable";
 
-const TicketsDashboard = () => {
+interface TicketsDashboardProps {
+  userRole: string;
+}
+
+const TicketsDashboard: React.FC<TicketsDashboardProps> = ({ userRole }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [statusFilter, setStatusFilter] = useState("Status");
   const [open, setOpen] = useState(false);
@@ -28,7 +32,7 @@ const TicketsDashboard = () => {
             </div>
 
             <div className="flex items-center gap-4">
-              <CustomSelect value={statusFilter} onChange={setStatusFilter} />
+              {/* <CustomSelect value={statusFilter} onChange={setStatusFilter} /> */}
               <div className="relative w-40 sm:w-60 md:w-80">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
@@ -41,7 +45,9 @@ const TicketsDashboard = () => {
           </div>
         </header>
 
-        <AddTicketDialog open={open} setOpen={setOpen} />
+        {/* Показываем AddTicketDialog только если роль НЕ SUPERVISOR */}
+        {userRole !== "SUPERVISOR" && <AddTicketDialog open={open} setOpen={setOpen} userRole={userRole} />}
+
         <main className="flex-1 overflow-auto p-4">
           <TicketTable />
         </main>

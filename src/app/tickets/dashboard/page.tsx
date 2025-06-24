@@ -1,11 +1,11 @@
+import TicketsDashboard from "@/appPages/site/components/page/DahsBoard/TicketDashboard ";
 import TicketDashboard from "@/appPages/site/components/page/DahsBoard/TicketDashboard ";
-import DashBoard from "@/appPages/site/components/page/DahsBoard/TicketDashboard ";
 import React from "react";
-
+const userRole = "SUPERVISOR";
 const page = () => {
   return (
     <div>
-      <TicketDashboard />
+      <TicketsDashboard userRole={userRole} />
     </div>
   );
 };

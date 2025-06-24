@@ -6,10 +6,24 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Plus } from "lucide-react";
 import { CreateTicketDto, TicketStatus } from "@/types/ticket.types";
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { useTicketcreateMutation } from "@/redux/api/ticket";
 
-const AddTicketDialog = ({ open, setOpen }: { open: boolean; setOpen: (value: boolean) => void }) => {
+interface AddTicketDialogProps {
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  userRole: string;
+}
+
+const AddTicketDialog: React.FC<AddTicketDialogProps> = ({ open, setOpen, userRole }) => {
+  // Добавляем отладку
+  console.log("AddTicketDialog userRole:", userRole);
+  console.log("userRole type:", typeof userRole);
+  console.log("Is SUPERVISOR?", userRole === "SUPERVISOR");
+
+  // Если роль SUPERVISOR — не показываем ничего (проверяем разные варианты)
+  if (userRole?.toLowerCase().trim() === "supervisor") return null;
+
   const statuses = [
     { label: "Open", value: TicketStatus.OPEN },
     { label: "In Progress", value: TicketStatus.IN_PROGRESS },
@@ -32,6 +46,7 @@ const AddTicketDialog = ({ open, setOpen }: { open: boolean; setOpen: (value: bo
       [id]: value,
     }));
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Данные для отправки:", ticketData);

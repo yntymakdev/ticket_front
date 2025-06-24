@@ -7,10 +7,10 @@ import { Check, ChevronDown, ChevronUp } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const statusOptions = [
-  { label: "All", value: "placeholder" },
-  { label: "Open", value: "Open" },
-  { label: "In Progress", value: "In Progress" },
-  { label: "Closed", value: "Closed" },
+  { label: "Все статусы", value: "ALL" },
+  { label: "Открыт", value: "OPEN" },
+  { label: "В процессе", value: "IN_PROGRESS" },
+  { label: "Закрыт", value: "CLOSED" },
 ];
 
 interface CustomSelectProps {
@@ -22,7 +22,7 @@ const CustomSelect: React.FC<CustomSelectProps> = ({ value, onChange }) => {
   return (
     <Select.Root value={value} onValueChange={onChange}>
       <Select.Trigger className="inline-flex items-center justify-between rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm w-36 sm:w-48 focus:outline-none focus:ring-2 focus:ring-blue-500">
-        <Select.Value placeholder="Select status" />
+        <Select.Value />
         <Select.Icon className="ml-2">
           <ChevronDown className="h-4 w-4 text-gray-500" />
         </Select.Icon>
