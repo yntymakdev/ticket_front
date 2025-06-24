@@ -57,11 +57,11 @@ const TicketTable = () => {
   //   // можно добавить обновление статуса через API
   // };
 
-  if (!token) return <div>Требуется авторизация</div>;
-  if (!tokenUtils.isTokenValid()) return <div>Токен истёк, обновляем...</div>;
-  if (!roleChecked) return <div>Загрузка данных пользователя...</div>;
-  if (isLoading) return <div>Загрузка билетов...</div>;
-  if (isError) return <div>Ошибка при загрузке: {error?.toString()}</div>;
+  //? if (!token) return <div>Требуется авторизация</div>;
+  // if (!tokenUtils.isTokenValid()) return <div>Токен истёк, обновляем...</div>;
+  // if (!roleChecked) return <div>Загрузка данных пользователя...</div>;
+  // if (isLoading) return <div>Загрузка билетов...</div>;
+  // if (isError) return <div>Ошибка при загрузке: {error?.toString()}</div>;
 
   return (
     <TicketList

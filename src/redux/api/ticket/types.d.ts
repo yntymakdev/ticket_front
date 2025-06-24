@@ -16,6 +16,12 @@ export interface ITicket {
   createdBy: IUser;
   assignments: IAssignment[];
 }
+export interface IComment {
+  id: string;
+  message: string;
+  userId: string;
+  ticketId: string;
+}
 
 // Назначение тикета
 // export interface IAssignment {
@@ -25,11 +31,17 @@ export interface ITicket {
 //   createdAt: string;
 // }
 
+export interface IPostCommentRequest {
+  id: string;
+  message: string;
+}
 export namespace TICKET {
   // --- Запросы ---
   export type GetAllRequest = void;
   export type GetAllResponse = ITicket[];
   export type GetStatusResponse = UpdateTicketStatusRequest[];
+  export type GetCommentRequest = IPostCommentRequest[];
+  export type GetCommentResponse = IComment[];
 
   export interface CreateTicketRequest {
     title: string;

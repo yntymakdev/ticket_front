@@ -1,5 +1,5 @@
 import { api as index } from "..";
-import { TICKET } from "./types";
+import { IComment, IPostCommentRequest, ITicket, TICKET } from "./types";
 
 const api = index.injectEndpoints({
   endpoints: (build) => ({
@@ -49,6 +49,41 @@ const api = index.injectEndpoints({
         providesTags: ["ticket"],
       }),
     }),
+    TicketDetail: build.query<ITicket, string>({
+      query: (id) => ({
+        url: `/ticket/tickets/${id}`,
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        providesTags: ["ticket"],
+      }),
+    }),
+    TicketComment: build.mutation<IComment, IPostCommentRequest>({
+      query: ({ id, message }) => ({
+        url: `/ticket/${id}/comments`,
+        method: "POST",
+        body: { message },
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        providesTags: ["ticket"],
+      }),
+    }),
+    GetComment: build.query<IComment, string>({
+      query: ({ id, message }) => ({
+        url: `/ticket/${id}/comments`,
+        method: "GET",
+        credentials: "include",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        providesTags: ["ticket"],
+      }),
+    }),
+  
 
     // register: build.mutation<AUTH.PostRegisterResponse, AUTH.PostRegisterRequest>({
     //   query: (registerData) => ({
@@ -61,5 +96,11 @@ const api = index.injectEndpoints({
   }),
 });
 
-export const { useTicketcreateMutation, useUpdateTicketStatusMutation, useTicketgetQuery, useTicketAssignMutation } =
-  api;
+export const {
+  useTicketcreateMutation,
+  useUpdateTicketStatusMutation,
+  useTicketgetQuery,
+  useTicketAssignMutation,
+  useTicketDetailQuery,
+  useTicketCommentMutation,
+} = api;

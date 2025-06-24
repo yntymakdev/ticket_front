@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { ITicket } from "@/redux/api/ticket/types";
 import { TicketStatus } from "@/types/ticket.types";
 import { useUpdateTicketStatus } from "@/hooks/useUpdateTicketStatus";
+import { useRouter } from "next/navigation";
 
 interface Props {
   tickets: ITicket[];
@@ -25,7 +26,11 @@ const getStatusStyle = (status: TicketStatus) => {
 
 const TicketList: React.FC<Props> = ({ tickets, userRole, operators, onReassign }) => {
   const { updateStatus } = useUpdateTicketStatus();
+  const router = useRouter(); // инициализируй
 
+  const handleRowClick = (ticketId: string) => {
+    router.push(`/tickets/${ticketId}`); // путь к детальной странице
+  };
   // Локальный стейт для мгновенного обновления UI
   const [localTickets, setLocalTickets] = useState<ITicket[]>([]);
 
@@ -84,7 +89,11 @@ const TicketList: React.FC<Props> = ({ tickets, userRole, operators, onReassign 
               </tr>
             ) : (
               localTickets.map((ticket) => (
-                <tr key={ticket.id} className="hover:bg-gray-50 transition-colors">
+                <tr
+                  onClick={() => handleRowClick(ticket.id)}
+                  key={ticket.id}
+                  className="hover:bg-gray-50 transition-colors"
+                >
                   <td className="py-3 px-6 text-gray-900">{ticket.title}</td>
                   <td className="py-3 px-6 text-gray-700">{ticket.customerName}</td>
                   <td className="py-3 px-6">

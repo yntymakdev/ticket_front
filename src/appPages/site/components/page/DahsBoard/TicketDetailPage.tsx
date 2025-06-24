@@ -1,7 +1,10 @@
-"use client";
-import React, { useState } from "react";
-import { Menu, X, ChevronRight, ChevronDown, ArrowLeft } from "lucide-react";
-import Sidebar from "./Sidebar";
+// "use client";
+// import React, { useState } from "react";
+// import { Menu, X, ChevronRight, ChevronDown, ArrowLeft } from "lucide-react";
+// import Sidebar from "./Sidebar";
+// import { useParams } from "next/navigation";
+// import { useTicketDetailQuery } from "@/redux/api/ticket";
+// import Link from "next/link";
 
 //? Sidebar Component
 // const Sidebar = ({ isOpen, onClose }) => {
@@ -61,42 +64,46 @@ import Sidebar from "./Sidebar";
 //   );
 // };
 
-// Main Ticket Detail Component
+// Main Ticket Detail 
+
+"use client";
+import React, { useState } from "react";
+import { Menu, ArrowLeft, ChevronDown, ChevronRight } from "lucide-react";
+import { useParams } from "next/navigation";
+import Link from "next/link";
+import Sidebar from "./Sidebar";
+// import { useTicketDetailQuery } from "@/redux/api/ticket";
+// import { usePostCommentMutation, useGetCommentsQuery } from "@/redux/api/ticketApi";
+// import { IComment } from "@/types/ticket.types";
+
 const TicketDetailPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [status, setStatus] = useState("Open");
   const [newComment, setNewComment] = useState("");
-  const [comments, setComments] = useState([
-    {
-      id: 1,
-      author: "John Doe",
-      time: "1 hour ago",
-      content: "Could you provide more details?",
-    },
-  ]);
 
-  const ticket = {
-    id: "#123",
-    title: "Ticket #123",
-    customer: "Jane Smith",
-    description: "Issue with product",
-    status: "Open",
-  };
+  const params = useParams();
+  const ticketId = params?.id as string;
 
-  const handleAddComment = () => {
-    if (newComment.trim()) {
-      const comment = {
-        id: comments.length + 1,
-        author: "Current User",
-        time: "Just now",
-        content: newComment.trim(),
-      };
-      setComments([...comments, comment]);
+  const { data: ticket, isLoading, isError, error } = useTicketDetailQuery(ticketId);
+  const { data: comments = [], refetch } = useGetCommentsQuery(ticketId);
+  const [postComment, { isLoading: isPosting }] = usePostCommentMutation();
+
+  if (isLoading) return <div>Загрузка тикета...</div>;
+  if (isError || !ticket) return <div>Ошибка: {error?.toString() || "Тикет не найден"}</div>;
+
+  const handleAddComment = async () => {
+    if (!newComment.trim()) return;
+
+    try {
+      await postComment({ id: ticketId, message: newComment }).unwrap();
       setNewComment("");
+      refetch(); // Обновить список комментариев
+    } catch (e) {
+      alert("Ошибка при добавлении комментария");
     }
   };
 
-  const handleKeyPress = (e: { key: string; ctrlKey: any; metaKey: any }) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && (e.ctrlKey || e.metaKey)) {
       handleAddComment();
     }
@@ -104,106 +111,96 @@ const TicketDetailPage = () => {
 
   return (
     <div className="flex h-screen bg-gray-50">
-      {/* Sidebar */}
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-      {/* Main Content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Header */}
-        <header className="bg-white border-b border-gray-200 px-2 sm:px-4 py-3 sm:py-4 lg:px-6">
+        <header className="bg-white border-b border-gray-200 px-4 py-4 lg:px-6">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-              {/* Mobile Menu Button */}
+            <div className="flex items-center gap-4 min-w-0">
               <button
                 onClick={() => setSidebarOpen(true)}
-                className="p-1.5 sm:p-2 rounded-md hover:bg-gray-100 lg:hidden flex-shrink-0"
+                className="p-2 rounded-md hover:bg-gray-100 lg:hidden"
               >
-                <Menu size={18} className="sm:w-5 sm:h-5" />
+                <Menu size={20} />
               </button>
 
-              {/* Back Button */}
-              <button className="p-1.5 sm:p-2 rounded-md hover:bg-gray-100 flex-shrink-0">
-                <ArrowLeft size={18} className="sm:w-5 sm:h-5" />
-              </button>
+              <Link href="/tickets/dashboard" className="p-2 rounded-md hover:bg-gray-100">
+                <ArrowLeft size={20} />
+              </Link>
 
-              <h1 className="text-lg sm:text-2xl font-bold text-gray-900 truncate">{ticket.title}</h1>
+              <h1 className="text-2xl font-bold text-gray-900 truncate">{ticket.title}</h1>
             </div>
 
-            {/* Status Dropdown */}
             <div className="relative">
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value)}
-                className="appearance-none bg-white border border-gray-300 rounded-md px-2 sm:px-4 py-1.5 sm:py-2 pr-6 sm:pr-8 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent min-w-0"
+                className="bg-white border border-gray-300 rounded-md px-4 py-2 pr-8 text-sm focus:ring-2 focus:ring-blue-500"
               >
                 <option>Open</option>
                 <option>In Progress</option>
                 <option>Closed</option>
               </select>
-              <ChevronDown className="absolute right-1 sm:right-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-3 h-3 sm:w-4 sm:h-4" />
+              <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
             </div>
           </div>
         </header>
 
-        {/* Content */}
-        <main className="flex-1 overflow-auto p-2 sm:p-4 lg:p-6">
-          <div className="max-w-4xl mx-auto space-y-4 sm:space-y-6">
-            {/* Ticket Info Card */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-6">
-              <div className="space-y-3 sm:space-y-4">
+        <main className="flex-1 overflow-auto p-4 lg:p-6">
+          <div className="max-w-4xl mx-auto space-y-6">
+            <div className="bg-white rounded-lg shadow-sm border p-6">
+              <div className="space-y-4">
                 <div>
-                  <h2 className="text-base sm:text-lg font-semibold text-gray-900 mb-1">{ticket.customer}</h2>
-                  <p className="text-sm sm:text-base text-gray-700">{ticket.description}</p>
+                  <h2 className="text-lg font-semibold text-gray-900">{ticket.customerName}</h2>
+                  <p className="text-base text-gray-700">{ticket.description}</p>
                 </div>
 
-                {/* Status Row */}
-                <div className="flex items-center justify-between py-2 sm:py-3 border-t border-gray-100">
-                  <span className="text-sm sm:text-base text-gray-900 font-medium">{status}</span>
-                  <ChevronRight className="text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
+                <div className="flex items-center justify-between border-t pt-3">
+                  <span className="text-gray-900 font-medium">{status}</span>
+                  <ChevronRight className="text-gray-400 w-5 h-5" />
                 </div>
               </div>
             </div>
 
-            {/* Comments Section */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-3 sm:p-6">
-              <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-3 sm:mb-4">Comments</h3>
+            {/* Комментарии */}
+            <div className="bg-white rounded-lg shadow-sm border p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Комментарии</h3>
 
-              {/* Comments List */}
-              <div className="space-y-3 sm:space-y-4 mb-4 sm:mb-6">
-                {comments.map((comment) => (
-                  <div key={comment.id} className="bg-gray-50 rounded-lg p-3 sm:p-4">
-                    <div className="flex items-center gap-2 mb-2">
-                      <span className="font-medium text-sm sm:text-base text-gray-900">{comment.author}</span>
-                      <span className="text-xs sm:text-sm text-gray-500">{comment.time}</span>
+              <div className="space-y-4 mb-6">
+                {comments.length === 0 && (
+                  <p className="text-sm text-gray-500">Комментариев пока нет.</p>
+                )}
+                {comments.map((comment: IComment) => (
+                  <div key={comment.id} className="bg-gray-50 rounded-lg p-4">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="font-medium text-sm text-gray-900">{comment.userId}</span>
+                      {/* В идеале заменить userId на user.email если доступно */}
                     </div>
-                    <p className="text-sm sm:text-base text-gray-700 break-words">{comment.content}</p>
+                    <p className="text-sm text-gray-700">{comment.message}</p>
                   </div>
                 ))}
               </div>
 
-              {/* Add Comment */}
               <div className="space-y-3">
                 <textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  onKeyPress={handleKeyPress}
-                  placeholder="Add a comment"
+                  onKeyDown={handleKeyPress}
+                  placeholder="Добавьте комментарий..."
                   rows={3}
-                  className="w-full px-3 sm:px-4 py-2 sm:py-3 border border-gray-300 rounded-lg text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
+                  className="w-full border border-gray-300 rounded-lg px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 resize-none"
                 />
                 <div className="flex justify-end">
                   <button
                     onClick={handleAddComment}
-                    disabled={!newComment.trim()}
-                    className="px-4 sm:px-6 py-2 sm:py-3 bg-slate-900 text-white rounded-lg text-sm sm:text-base font-medium hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    disabled={!newComment.trim() || isPosting}
+                    className="bg-slate-900 text-white px-6 py-3 rounded-lg text-sm font-medium hover:bg-slate-800 disabled:opacity-50"
                   >
-                    Add Comment
+                    {isPosting ? "Отправка..." : "Добавить комментарий"}
                   </button>
                 </div>
+                <p className="text-xs text-gray-500">Нажмите Ctrl+Enter для отправки</p>
               </div>
-
-              {/* Helper Text */}
-              <p className="text-xs text-gray-500 mt-2">Press Ctrl+Enter to submit</p>
             </div>
           </div>
         </main>
