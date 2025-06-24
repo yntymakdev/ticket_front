@@ -64,7 +64,7 @@
 //   );
 // };
 
-// Main Ticket Detail 
+// Main Ticket Detail
 
 "use client";
 import React, { useState } from "react";
@@ -72,9 +72,8 @@ import { Menu, ArrowLeft, ChevronDown, ChevronRight } from "lucide-react";
 import { useParams } from "next/navigation";
 import Link from "next/link";
 import Sidebar from "./Sidebar";
-// import { useTicketDetailQuery } from "@/redux/api/ticket";
-// import { usePostCommentMutation, useGetCommentsQuery } from "@/redux/api/ticketApi";
-// import { IComment } from "@/types/ticket.types";
+import { useGetCommentQuery, useTicketCommentMutation, useTicketDetailQuery } from "@/redux/api/ticket";
+import { IComment } from "@/redux/api/ticket/types";
 
 const TicketDetailPage = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -85,8 +84,8 @@ const TicketDetailPage = () => {
   const ticketId = params?.id as string;
 
   const { data: ticket, isLoading, isError, error } = useTicketDetailQuery(ticketId);
-  const { data: comments = [], refetch } = useGetCommentsQuery(ticketId);
-  const [postComment, { isLoading: isPosting }] = usePostCommentMutation();
+  const { data: comments = [], refetch } = useGetCommentQuery(ticketId);
+  const [postComment, { isLoading: isPosting }] = useTicketCommentMutation();
 
   if (isLoading) return <div>Загрузка тикета...</div>;
   if (isError || !ticket) return <div>Ошибка: {error?.toString() || "Тикет не найден"}</div>;
@@ -117,10 +116,7 @@ const TicketDetailPage = () => {
         <header className="bg-white border-b border-gray-200 px-4 py-4 lg:px-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4 min-w-0">
-              <button
-                onClick={() => setSidebarOpen(true)}
-                className="p-2 rounded-md hover:bg-gray-100 lg:hidden"
-              >
+              <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-md hover:bg-gray-100 lg:hidden">
                 <Menu size={20} />
               </button>
 
@@ -167,9 +163,7 @@ const TicketDetailPage = () => {
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Комментарии</h3>
 
               <div className="space-y-4 mb-6">
-                {comments.length === 0 && (
-                  <p className="text-sm text-gray-500">Комментариев пока нет.</p>
-                )}
+                {comments.length === 0 && <p className="text-sm text-gray-500">Комментариев пока нет.</p>}
                 {comments.map((comment: IComment) => (
                   <div key={comment.id} className="bg-gray-50 rounded-lg p-4">
                     <div className="flex items-center gap-2 mb-1">

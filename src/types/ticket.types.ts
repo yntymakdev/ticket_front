@@ -17,10 +17,10 @@ export interface CreateTicketDto {
   assignedTo?: string;
 }
 
-export interface IComment {
-  id: string;
-  message: string;
-}
+// export interface IComment {
+//   id: string;
+//   message: string;
+// }
 export interface IAssignment {
   id: string;
   ticketId: string;

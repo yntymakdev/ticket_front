@@ -1,5 +1,5 @@
 import { api as index } from "..";
-import { IComment, IPostCommentRequest, ITicket, TICKET } from "./types";
+import { IComment, ICommentGet, IPostCommentRequest, ITicket, TICKET } from "./types";
 
 const api = index.injectEndpoints({
   endpoints: (build) => ({
@@ -72,9 +72,9 @@ const api = index.injectEndpoints({
         providesTags: ["ticket"],
       }),
     }),
-    GetComment: build.query<IComment, string>({
-      query: ({ id, message }) => ({
-        url: `/ticket/${id}/comments`,
+    GetComment: build.query<IComment[], string>({
+      query: (ticketId) => ({
+        url: `/ticket/${ticketId}/comments`,
         method: "GET",
         credentials: "include",
         headers: {
@@ -83,16 +83,6 @@ const api = index.injectEndpoints({
         providesTags: ["ticket"],
       }),
     }),
-  
-
-    // register: build.mutation<AUTH.PostRegisterResponse, AUTH.PostRegisterRequest>({
-    //   query: (registerData) => ({
-    //     url: "/auth/register",
-    //     method: "POST",
-    //     body: registerData,
-    //   }),
-    //   invalidatesTags: ["ticket"],
-    // }),
   }),
 });
 
@@ -103,4 +93,5 @@ export const {
   useTicketAssignMutation,
   useTicketDetailQuery,
   useTicketCommentMutation,
+  useGetCommentQuery,
 } = api;

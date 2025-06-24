@@ -21,6 +21,11 @@ export interface IComment {
   message: string;
   userId: string;
   ticketId: string;
+  user: {
+    id: string;
+    email: string;
+    role: string;
+  };
 }
 
 // Назначение тикета
@@ -30,6 +35,19 @@ export interface IComment {
 //   assignedBy: IUser;
 //   createdAt: string;
 // }
+
+export interface ICommentGet {
+  id: string;
+  message: string;
+  userId: string;
+  ticketId: string;
+  createdAt: string;
+  user: {
+    id: string;
+    email: string;
+    role: string;
+  };
+}
 
 export interface IPostCommentRequest {
   id: string;
