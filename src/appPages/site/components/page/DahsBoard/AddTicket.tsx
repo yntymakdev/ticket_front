@@ -16,8 +16,6 @@ interface AddTicketDialogProps {
 }
 
 const AddTicketDialog: React.FC<AddTicketDialogProps> = ({ open, setOpen, userRole }) => {
-  // Если роль SUPERVISOR — не показываем ничего (проверяем разные варианты)
-
   const statuses = [
     { label: "Open", value: TicketStatus.OPEN },
     { label: "In Progress", value: TicketStatus.IN_PROGRESS },

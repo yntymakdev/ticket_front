@@ -1,58 +1,6 @@
-// import Cookies from "js-cookie";
-// export const tokenUtils = {
-//   // Получить роль из токена
-//   getUserRole: (): string | null => {
-//     const token = Cookies.get("accessToken");
-//     if (!token) return null;
-
-//     try {
-//       const payload = JSON.parse(atob(token.split(".")[1]));
-//       return payload.role || null;
-//     } catch (e) {
-//       console.error("Error parsing token for role:", e);
-//       return null;
-//     }
-//   },
-
-//   // Получить ID пользователя из токена
-//   getUserId: (): string | null => {
-//     const token = Cookies.get("accessToken");
-//     if (!token) return null;
-
-//     try {
-//       const payload = JSON.parse(atob(token.split(".")[1]));
-//       return payload.userId || payload.sub || null;
-//     } catch (e) {
-//       console.error("Error parsing token for userId:", e);
-//       return null;
-//     }
-//   },
-
-//   // Проверить валидность токена
-//   isTokenValid: (): boolean => {
-//     const token = Cookies.get("accessToken");
-//     if (!token) return false;
-
-//     try {
-//       const payload = JSON.parse(atob(token.split(".")[1]));
-//       const now = Math.floor(Date.now() / 1000);
-//       return payload.exp > now;
-//     } catch (e) {
-//       return false;
-//     }
-//   },
-
-//   // Очистить все токены
-//   clearTokens: () => {
-//     Cookies.remove("accessToken");
-//     Cookies.remove("refreshToken");
-//   },
-// };
-
 import Cookies from "js-cookie";
 
 export const tokenUtils = {
-  // Получить роль из токена
   getUserRole: (): string | null => {
     const token = Cookies.get("accessToken");
     if (!token) {
@@ -92,7 +40,6 @@ export const tokenUtils = {
       return null;
     }
   },
-  // Получить ID пользователя из токена
   getUserId: (): string | null => {
     const token = Cookies.get("accessToken");
     if (!token) {
@@ -111,7 +58,6 @@ export const tokenUtils = {
     }
   },
 
-  // Проверить валидность токена
   isTokenValid: (): boolean => {
     const token = Cookies.get("accessToken");
     if (!token) {
@@ -138,7 +84,6 @@ export const tokenUtils = {
     }
   },
 
-  // Очистить все токены
   clearTokens: () => {
     console.log("Clearing all tokens");
     Cookies.remove("acce    ssToken");
@@ -146,7 +91,6 @@ export const tokenUtils = {
     console.log("✅ Full token payload:");
   },
 
-  // Получить весь payload токена для отладки
   getTokenPayload: () => {
     const token = Cookies.get("accessToken");
     if (!token) return null;

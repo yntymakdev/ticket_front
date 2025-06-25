@@ -1,4 +1,3 @@
-// hooks/useAssignTicket.ts
 import { useTicketAssignMutation } from "@/redux/api/ticket";
 
 export const useAssignTicket = () => {

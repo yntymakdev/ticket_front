@@ -57,13 +57,11 @@ const LoginPage = () => {
       <Toaster position="top-center" />
       <Card className="w-full max-w-sm">
         <CardHeader>
-          <CardTitle>{isLogin ? "Login to your account" : "Register new account"}</CardTitle>
-          <CardDescription>
-            {isLogin ? "Enter your email and password to login" : "Enter your email and password to register"}
-          </CardDescription>
+          <CardTitle>{isLogin ? "Войти" : "Регистрация"}</CardTitle>
+          <CardDescription>{isLogin ? "Введите свою почту и пароль " : "Введите свою почту и пароль"}</CardDescription>
           <CardAction>
             <Button variant="link" onClick={() => setIsLogin(!isLogin)}>
-              {isLogin ? "Switch to Register" : "Switch to Login"}
+              {isLogin ? "Переход к регистру" : "Переключиться на вход в систему"}
             </Button>
           </CardAction>
         </CardHeader>
@@ -71,7 +69,7 @@ const LoginPage = () => {
         <CardContent>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div className="grid gap-2">
-              <label htmlFor="email">Email</label>
+              <label htmlFor="email">Почта</label>
               <Input
                 id="email"
                 type="email"
@@ -83,7 +81,7 @@ const LoginPage = () => {
             </div>
 
             <div className="grid gap-2">
-              <label htmlFor="password">Password</label>
+              <label htmlFor="password">Пароль</label>
               <Input
                 id="password"
                 type="password"
@@ -95,12 +93,12 @@ const LoginPage = () => {
             </div>
 
             <Button type="submit" className="w-full" disabled={isLogin ? isLoginLoading : isRegisterLoading}>
-              {isLogin ? "Login" : "Register"}
+              {isLogin ? "Вход" : "Регистрация"}
             </Button>
           </form>
         </CardContent>
 
-        <CardFooter>{/* Доп. инфо или кнопки */}</CardFooter>
+        <CardFooter></CardFooter>
       </Card>
     </section>
   );

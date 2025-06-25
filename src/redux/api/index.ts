@@ -26,7 +26,6 @@ const baseQueryWithAuth: BaseQueryFn = async (args, api, extraOptions) => {
 
   console.log("Результат запроса:", result);
 
-  // ✅ ЕСЛИ токены пришли — сохранить их в cookie
   if (result.data && (result.data as any).accessToken && (result.data as any).refreshToken) {
     const { accessToken, refreshToken } = result.data as any;
 
@@ -47,7 +46,6 @@ const baseQueryWithAuth: BaseQueryFn = async (args, api, extraOptions) => {
 
   if (result.error?.status === 401) {
     console.error("Ошибка авторизации 401:", result.error);
-    // Можно тут добавить логику редиректа или обновления токена
   }
 
   return result;

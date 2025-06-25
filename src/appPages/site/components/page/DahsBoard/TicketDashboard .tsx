@@ -38,17 +38,17 @@ const TicketsDashboard: React.FC<TicketsDashboardProps> = ({ userRole }) => {
               <h1 className="text-xl sm:text-2xl font-bold text-gray-900 truncate">Tickets</h1>
             </div>
 
-            <div className="flex items-center gap-4">
-              <div className="relative w-40 sm:w-60 md:w-80">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4 w-full sm:w-auto mt-4 sm:mt-0">
+              <div className="relative w-full sm:w-60 md:w-80">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <input
                   type="text"
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search..."
+                  placeholder="Поиск..."
                   className="pl-10 pr-4 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 w-full"
                 />
               </div>
-              <Button variant={"outline"} onClick={logout}>
+              <Button variant="outline" onClick={logout} className="w-full sm:w-auto">
                 Выйти
               </Button>
             </div>

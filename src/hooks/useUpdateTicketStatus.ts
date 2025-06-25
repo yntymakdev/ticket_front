@@ -1,4 +1,3 @@
-// hooks/useUpdateTicketStatus.ts
 import { useUpdateTicketStatusMutation } from "@/redux/api/ticket";
 import { TicketStatus } from "@/types/ticket.types";
 
@@ -15,7 +14,7 @@ export const useUpdateTicketStatus = () => {
   };
 
   return {
-    updateStatus, // ✅ возвращается сюда
+    updateStatus,
     ...meta,
   };
 };

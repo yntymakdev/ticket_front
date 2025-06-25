@@ -27,7 +27,7 @@ const TicketDetailPage = () => {
     try {
       await postComment({ id: ticketId, message: newComment }).unwrap();
       setNewComment("");
-      refetch(); // Обновить список комментариев
+      refetch();
     } catch (e) {
       alert("Ошибка при добавлении комментария");
     }
@@ -76,7 +76,6 @@ const TicketDetailPage = () => {
               </div>
             </div>
 
-            {/* Комментарии */}
             <div className="bg-white rounded-lg shadow-sm border p-6">
               <h3 className="text-lg font-semibold text-gray-900 mb-4">Комментарии</h3>
 

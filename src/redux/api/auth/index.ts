@@ -27,24 +27,7 @@ const api = index.injectEndpoints({
         method: "POST",
         body: refreshData,
       }),
-      // async onQueryStarted(refreshData, { queryFulfilled }) {
-      //   try {
-      //     const { data } = await queryFulfilled;
-      //     Cookies.set("accessToken", data.accessToken, {
-      //       path: "/",
-      //       sameSite: "Lax",
-      //     });
 
-      //     Cookies.set("refreshToken", data.refreshToken, {
-      //       path: "/",
-      //       sameSite: "Lax",
-      //     });
-
-      //     console.log("✅ Refresh tokens updated");
-      //   } catch (error) {
-      //     console.error("❌ Failed to refresh token:", error);
-      //   }
-      // },
       invalidatesTags: ["auth"],
     }),
   }),

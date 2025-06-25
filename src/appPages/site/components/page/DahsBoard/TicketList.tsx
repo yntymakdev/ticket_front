@@ -93,8 +93,10 @@ const TicketList: React.FC<Props> = ({ tickets, userRole, operators, onReassign 
       <div className="p-4">
         <CustomSelect value={filterStatus} onChange={handleFilterChange} />
       </div>
-      <div className="max-h-[400px] overflow-auto">
-        <table className="w-full min-w-[700px]">
+
+      {/* Десктопная версия - таблица */}
+      <div className="hidden md:block max-h-[400px] overflow-auto">
+        <table className="w-full">
           <thead className="bg-gray-50 border-b border-gray-200 sticky top-0 z-10">
             <tr>
               <th className="text-left py-3 px-6 font-semibold text-gray-900">Название</th>
@@ -118,7 +120,7 @@ const TicketList: React.FC<Props> = ({ tickets, userRole, operators, onReassign 
                 <tr
                   onClick={() => handleRowClick(ticket.id)}
                   key={ticket.id}
-                  className="hover:bg-gray-50 transition-colors"
+                  className="hover:bg-gray-50 transition-colors cursor-pointer"
                 >
                   <td className="py-3 px-6 text-gray-900">{ticket.title}</td>
                   <td onClick={(e) => e.stopPropagation()} className="py-3 px-6 text-gray-700">
@@ -180,6 +182,96 @@ const TicketList: React.FC<Props> = ({ tickets, userRole, operators, onReassign 
             )}
           </tbody>
         </table>
+      </div>
+
+      {/* Мобильная версия - карточки */}
+      <div className="md:hidden max-h-[400px] overflow-auto">
+        {filteredTickets.length === 0 ? (
+          <div className="py-8 px-4 text-center text-gray-500">Тикеты не найдены</div>
+        ) : (
+          <div className="space-y-3 p-4">
+            {filteredTickets.map((ticket) => (
+              <div
+                key={ticket.id}
+                onClick={() => handleRowClick(ticket.id)}
+                className="bg-gray-50 rounded-lg p-4 border border-gray-200 hover:bg-gray-100 transition-colors cursor-pointer"
+              >
+                {/* Заголовок и клиент */}
+                <div className="mb-3">
+                  <h3 className="font-medium text-gray-900 mb-1">{ticket.title}</h3>
+                  <p className="text-sm text-gray-600">Клиент: {ticket.customerName}</p>
+                </div>
+
+                {/* Статус */}
+                <div className="mb-3">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Статус:</label>
+                  <select
+                    onClick={(e) => e.stopPropagation()}
+                    value={ticket.status}
+                    onChange={(e) => handleStatusChange(ticket.id, e.target.value as TicketStatus)}
+                    className={`w-full rounded-md px-3 py-2 text-sm font-medium ${getStatusStyle(
+                      ticket.status
+                    )} border-0`}
+                  >
+                    {statusOptions
+                      .filter((s) => s.value !== "ALL")
+                      .map((status) => (
+                        <option key={status.value} value={status.value}>
+                          {status.label}
+                        </option>
+                      ))}
+                  </select>
+                </div>
+
+                {/* Оператор */}
+                <div className="mb-3">
+                  <label className="block text-xs font-medium text-gray-700 mb-1">Оператор:</label>
+                  {userRole === "SUPERVISOR" ? (
+                    <div className="space-y-2">
+                      <select
+                        onClick={(e) => e.stopPropagation()}
+                        value={ticket.assignments?.[0]?.assignedTo || ""}
+                        onChange={(e) => onReassign(ticket.id, e.target.value)}
+                        className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm bg-white"
+                      >
+                        <option value="">Не назначен</option>
+                        {operators.map((op) => (
+                          <option key={op.id} value={op.id}>
+                            {op.email}
+                          </option>
+                        ))}
+                      </select>
+                      {ticket.assignments?.length > 0 && operators.length > 0 && (
+                        <div className="text-green-600 text-xs">
+                          Назначено:{" "}
+                          {operators.find((op) => op.id === ticket.assignments?.[0]?.assignedTo)?.email ??
+                            "Оператор не найден"}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <div className="text-gray-500 text-sm">Нет доступа</div>
+                  )}
+                </div>
+
+                {/* Действия для супервизора */}
+                {userRole === "SUPERVISOR" && (
+                  <div className="pt-2 border-t border-gray-200">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(ticket.id);
+                      }}
+                      className="text-red-600 hover:text-red-800 text-sm font-medium"
+                    >
+                      Удалить тикет
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

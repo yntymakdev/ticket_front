@@ -1,4 +1,3 @@
-import TicketDetail from "@/appPages/site/components/page/DahsBoard/TicketDetail";
 import TicketDetailPage from "@/appPages/site/components/page/DahsBoard/TicketDetailPage";
 import React from "react";
 
