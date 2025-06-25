@@ -8,8 +8,11 @@
 
 | Главная панель             | Создание тикета             | Просмотр тикета              |
 |----------------------------|-----------------------------|------------------------------|
-| ![Dashboard](./public/) | ![Create Ticket](./screenshots/create_ticket.png) | ![View Ticket](./screenshots/view_ticket.png) |
+| ![Dashboard](./screenshots/demo.svg) | 
 
+| Главная панель             | Создание тикета             | Просмотр тикета              |
+|----------------------------|-----------------------------|------------------------------|
+| ![Dashboard](./screenshots/first.jpg) | | ![Dashboard](./screenshots/four.jpg) || ![Dashboard](./screenshots/two.jpg) |  
 > Помести скриншоты в папку `screenshots/` в корне проекта.
 
 ---
