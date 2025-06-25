@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎟️ Ticket Management System
 
-## Getting Started
+Добро пожаловать в проект **Ticket** — современное веб-приложение для управления тикетами. Это мощный инструмент, позволяющий операторам и супервайзерам эффективно обрабатывать обращения клиентов, отслеживать статусы заявок и координировать рабочие процессы.
 
-First, run the development server:
+---
+
+## 📸 Скриншоты
+
+| Главная панель             | Создание тикета             | Просмотр тикета              |
+|----------------------------|-----------------------------|------------------------------|
+| ![Dashboard](./screenshots/dashboard.png) | ![Create Ticket](./screenshots/create_ticket.png) | ![View Ticket](./screenshots/view_ticket.png) |
+
+> Помести скриншоты в папку `screenshots/` в корне проекта.
+
+---
+
+## ⚙️ Технологии
+
+- **Frontend**:  
+  ![React](https://img.shields.io/badge/-React-61DAFB?logo=react&logoColor=white&style=flat-square)  
+  ![Redux Toolkit](https://img.shields.io/badge/-Redux%20Toolkit-764ABC?logo=redux&logoColor=white&style=flat-square)  
+  ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white&style=flat-square)  
+  ![React Hook Form](https://img.shields.io/badge/-React%20Hook%20Form-EC5990?logo=reacthookform&logoColor=white&style=flat-square)  
+  ![SCSS Modules](https://img.shields.io/badge/-SCSS%20Modules-CD6799?logo=sass&logoColor=white&style=flat-square)
+
+- **Backend** (если есть):  
+  ![NestJS](https://img.shields.io/badge/-NestJS-E0234E?logo=nestjs&logoColor=white&style=flat-square)  
+  ![Prisma](https://img.shields.io/badge/-Prisma-2D3748?logo=prisma&logoColor=white&style=flat-square)  
+  ![PostgreSQL](https://img.shields.io/badge/-PostgreSQL-4169E1?logo=postgresql&logoColor=white&style=flat-square)
+
+- **DevOps**:  
+  ![Docker](https://img.shields.io/badge/-Docker-2496ED?logo=docker&logoColor=white&style=flat-square)
+
+---
+
+## 👤 Роли пользователей
+
+- **Оператор**:
+  - Создает тикеты.
+  - Отвечает на тикеты.
+  - Может видеть только свои тикеты.
+  - Меняет статусы: `OPEN`, `IN_PROGRESS`, `CLOSED`.
+
+- **Супервайзер**:
+  - Видит все тикеты.
+  - Может назначать тикеты другим операторам.
+  - Не может создавать тикеты.
+
+---
+
+## 📂 Основные функции
+
+- 🔍 Поиск тикетов по имени клиента.
+- 📝 Создание, редактирование и просмотр тикетов.
+- 🔄 Статусы тикетов: `OPEN`, `IN_PROGRESS`, `CLOSED`.
+- 🧑‍🤝‍🧑 Разделение прав доступа между ролями.
+- 🧠 Интуитивный интерфейс с современным дизайном.
+- 🚀 Производительное API с использованием RTK Query.
+
+---
+
+## 🧪 Установка и запуск
 
 ```bash
+# 1. Клонируй репозиторий
+git clone https://github.com/yourusername/ticket.git
+
+# 2. Перейди в директорию проекта
+cd ticket
+
+# 3. Установи зависимости
+npm install
+
+# 4. Запусти проект
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
