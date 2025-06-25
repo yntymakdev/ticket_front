@@ -7,6 +7,10 @@ const api = index.injectEndpoints({
       query: (loginData) => ({
         url: "/auth/login",
         method: "POST",
+        headers: {
+          "Content-Type": "application/json", // ✅ обязательно
+        },
+
         body: loginData,
         credentials: "include",
       }),
@@ -17,6 +21,10 @@ const api = index.injectEndpoints({
       query: (registerData) => ({
         url: "/auth/register",
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+
         body: registerData,
       }),
       invalidatesTags: ["auth"],
@@ -25,6 +33,10 @@ const api = index.injectEndpoints({
       query: (refreshData) => ({
         url: "/auth/login/access-token",
         method: "POST",
+        headers: {
+          "Content-Type": "application/json", // ✅ обязательно
+        },
+
         body: refreshData,
       }),
 
