@@ -6,13 +6,20 @@
 
 ## 📸 Скриншоты
 
-| Главная панель             | Создание тикета             | Просмотр тикета              |
+| Главная панель             | |
 |----------------------------|-----------------------------|------------------------------|
 | ![Dashboard](./screenshots/demo.svg) | 
 
-| Главная панель             | Создание тикета             | Просмотр тикета              |
+| Страница тикета             |              |           Добавление тикета    |
 |----------------------------|-----------------------------|------------------------------|
-| ![Dashboard](./screenshots/first.jpg) | | ![Dashboard](./screenshots/four.jpg) || ![Dashboard](./screenshots/two.jpg) |  
+| ![Dashboard](./screenshots/eleven.png) | | ![Dashboard](./screenshots/twelve.png) || 
+> Помести скриншоты в папку `screenshots/` в корне проекта.
+
+---
+
+| Главная панель             | 
+|----------------------------|-----------------------------|------------------------------|
+| ![Dashboard](./screenshots/thirteen.png) | |
 > Помести скриншоты в папку `screenshots/` в корне проекта.
 
 ---
@@ -24,7 +31,8 @@
   ![Redux Toolkit](https://img.shields.io/badge/-Redux%20Toolkit-764ABC?logo=redux&logoColor=white&style=flat-square)  
   ![TypeScript](https://img.shields.io/badge/-TypeScript-3178C6?logo=typescript&logoColor=white&style=flat-square)  
   ![React Hook Form](https://img.shields.io/badge/-React%20Hook%20Form-EC5990?logo=reacthookform&logoColor=white&style=flat-square)  
-  ![SCSS Modules](https://img.shields.io/badge/-SCSS%20Modules-CD6799?logo=sass&logoColor=white&style=flat-square)
+  ![Tailwind CSS](https://img.shields.io/badge/-Tailwind%20CSS-38B2AC?logo=tailwindcss&logoColor=white&style=flat-square)
+
 
 - **Backend** (если есть):  
   ![NestJS](https://img.shields.io/badge/-NestJS-E0234E?logo=nestjs&logoColor=white&style=flat-square)  
@@ -46,8 +54,9 @@
 
 - **Супервайзер**:
   - Видит все тикеты.
+  - Создавать тикеты.
   - Может назначать тикеты другим операторам.
-  - Не может создавать тикеты.
+  - Может удалять тикеты.
 
 ---
 
@@ -61,6 +70,7 @@
 - 🚀 Производительное API с использованием RTK Query.
 
 ---
+🧪 Проект уже задеплоен!: [Посмотреть](https://ticket-front-6m8a.vercel.app/)
 
 ## 🧪 Установка и запуск
 
