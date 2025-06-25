@@ -8,7 +8,7 @@ function getCookie(name: string): string | null {
 }
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: process.env.NEXT_PUBLIC_API_VITE_URL,
+  baseUrl: process.env.SERVER_URL,
   credentials: "include",
   prepareHeaders: (headers) => {
     const token = Cookies.get("accessToken");
